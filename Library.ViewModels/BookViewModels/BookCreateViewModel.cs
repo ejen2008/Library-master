@@ -1,16 +1,14 @@
-﻿using System;
+﻿using Library.ViewModels.AuthorViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using Library.ViewModels.AuthorViewModels;
 
 namespace Library.ViewModels.BookViewModels
 {
-    public class BookGetViewModel
+    public class BookCreateViewModel
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
 

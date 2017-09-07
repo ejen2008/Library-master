@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Library.BLL.DTO;
 using Library.DAL.Entities;
 using Library.BLL.Infrastructure;
 using Library.DAL.EF;
 using Library.DAL.Repositories;
 using AutoMapper;
+using Library.ViewModels.BookViewModels;
 
 namespace Library.BLL.Services
 {
@@ -22,7 +22,7 @@ namespace Library.BLL.Services
             _bookRepository = bookRepository;
         }
 
-        public BookDTO GetBook(int? id)
+        public BookGetViewModel GetBook(int? id)
         {
             if (id == null)
             {
@@ -31,62 +31,59 @@ namespace Library.BLL.Services
             var book = _bookRepository.Get(id.Value);
             if (book == null)
             {
-                throw new ValidationException("Book doesn't found","");
+                throw new ValidationException("Book doesn't found", "");
             }
-            Mapper.Initialize(c => c.CreateMap<Book, BookDTO>());
-            BookDTO bookDto = Mapper.Map<Book, BookDTO>(book);
-            return bookDto;
+            Mapper.Initialize(c => c.CreateMap<Book, BookGetViewModel>());
+            BookGetViewModel bookView = Mapper.Map<Book, BookGetViewModel>(book);
+
+            return bookView;
         }
 
-        public IEnumerable<BookDTO> GetBooks()
+        public IEnumerable<BookGetViewModel> GetBooks()
         {
-            Mapper.Initialize(c => c.CreateMap<Book, BookDTO>());
+            Mapper.Initialize(c => c.CreateMap<Book, BookGetViewModel>());
             IEnumerable<Book> books = _bookRepository.GetAll();
-            List<BookDTO> booksDTO = Mapper.Map<IEnumerable<Book>, List<BookDTO>>(books);
-            return booksDTO;
+            List<BookGetViewModel> booksView = Mapper.Map<IEnumerable<Book>, List<BookGetViewModel>>(books);
+            return booksView;
         }
 
-        public void CreateBook(BookDTO bookDTO)
+        public void CreateBook(BookCreateViewModel bookView)
         {
-            ValidExceptionCreated(bookDTO);
-            Book book = MappBook(bookDTO);
+            ValidExceptionCreated(bookView);
+            Mapper.Initialize(a => a.CreateMap<BookCreateViewModel, Book>());
+            Book book = Mapper.Map<BookCreateViewModel, Book>(bookView);
             _bookRepository.Create(book);
         }
-        public void Update(BookDTO bookDTO)
+        public void Update(BookGetViewModel bookView)
         {
-            ValidExceptionCreated(bookDTO);
+            if (bookView == null)
+            {
+                throw new ValidationException(_exceptionDoesnotCreated, "");
+            }
 
-            Book book = _bookRepository.Get(bookDTO.Id);
+            Book book = _bookRepository.Get(bookView.Id);
 
             ValidExceptionFound(book);
 
             book = null;
-            book = MappBook(bookDTO);
+            Mapper.Initialize(a => a.CreateMap<BookGetViewModel, Book>());
+            book = Mapper.Map<BookGetViewModel, Book>(bookView);
             _bookRepository.Update(book);
         }
 
-        public void Delete(BookDTO bookDTO)
+        public void Delete(int id)
         {
-            ValidExceptionCreated(bookDTO);
-
-            Book book = _bookRepository.Get(bookDTO.Id);
-
+            Book book = _bookRepository.Get(id);
             ValidExceptionFound(book);
-            _bookRepository.Delete(book.Id);
+            _bookRepository.Delete(id);
         }
 
-        private void ValidExceptionCreated(BookDTO BookDTO)
+        private void ValidExceptionCreated(BookCreateViewModel bookView)
         {
-            if (BookDTO == null)
+            if (bookView == null)
             {
                 throw new ValidationException(_exceptionDoesnotCreated, "");
             }
-        }
-        private Book MappBook(BookDTO bookDTO)
-        {
-            Mapper.Initialize(a => a.CreateMap<BookDTO, Book>());
-            Book book = Mapper.Map<BookDTO, Book>(bookDTO);
-            return book;
         }
 
         private void ValidExceptionFound(Book book)

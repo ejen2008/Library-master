@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Library.ViewModels.BookViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using Library.ViewModels.AuthorViewModels;
 
-namespace Library.ViewModels.BookViewModels
+namespace Library.ViewModels.AuthorViewModels
 {
-    public class BookGetViewModel
+    public class AuthorGetViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -16,6 +15,6 @@ namespace Library.ViewModels.BookViewModels
 
         public DateTime? BirthDate { get; set; }
         public DateTime? DaiedDate { get; set; }
-        public IEnumerable<AuthorGetViewModel> Authors { get; set; }
+        public List<BookGetViewModel> Books { get; set; }
     }
 }

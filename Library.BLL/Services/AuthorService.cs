@@ -1,28 +1,33 @@
 ﻿using AutoMapper;
-using Library.BLL.DTO;
 using Library.BLL.Infrastructure;
 using Library.DAL.Entities;
 using Library.DAL.Repositories;
+using Library.ViewModels.AuthorViewModels;
+using Library.ViewModels.BookViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+
 
 namespace Library.BLL.Services
 {
     public class AuthorService
     {
         private AuthorRepository _authorRepository;
+        private BookRepository _bookRepository;
+        private BookService _bookService;
         private string _exceprionDosenotFound = "Author doesn't found";
         private string _exceptionDoesnotCreated = "Author doesn't created";
 
-        public AuthorService(AuthorRepository repository)
+        public AuthorService()
         {
-            var rep = new AuthorRepository(new DAL.EF.LibraryContext());
-            _authorRepository = repository;
+            var context = new DAL.EF.LibraryContext();
+            _authorRepository = new AuthorRepository(context);
+            _bookRepository = new BookRepository(context);
         }
 
-        public AuthorDTO GetAuthor(int? id)
+        public AuthorGetViewModel GetAuthor(int? id)
         {
             if (id == null)
             {
@@ -32,41 +37,68 @@ namespace Library.BLL.Services
 
             ValidExceptionFound(author);
 
-            Mapper.Initialize(a => a.CreateMap<Author, AuthorDTO>());
-            AuthorDTO authorDTO = Mapper.Map<Author, AuthorDTO>(author);
-            return authorDTO;
+            Mapper.Initialize(a => a.CreateMap<Author, AuthorGetViewModel>());
+            AuthorGetViewModel authorView = Mapper.Map<Author, AuthorGetViewModel>(author);
+            authorView.Books = new List<BookGetViewModel>();
+
+            _bookService = new BookService(_bookRepository);
+            authorView.Books = GetBook(author.BookId);
+
+            return authorView;
         }
-        public IEnumerable<AuthorDTO> GetAuthors()
+        private List<BookGetViewModel> GetBook(IEnumerable<int> bookId)
         {
-            Mapper.Initialize(a => a.CreateMap<Author, AuthorDTO>());
-            IEnumerable<Author> author = _authorRepository.GetAll();
-            List<AuthorDTO> authorsDTO = Mapper.Map<IEnumerable< Author>, List<AuthorDTO>>(author);
-            return authorsDTO;
+            var booksView = new List<BookGetViewModel>();
+            foreach (int idBook in bookId)
+            {
+                 booksView.Add(_bookService.GetBook(idBook));
+            }
+            return booksView;
         }
 
-        public void CreateAuthor(AuthorDTO authorDTO)
+        public IEnumerable<AuthorGetViewModel> GetAuthors()
         {
-            ValidExceptionCreated(authorDTO);
+            Mapper.Initialize(a => a.CreateMap<Author, AuthorGetViewModel>());
+            IEnumerable<Author> authors = _authorRepository.GetAll();
+            List<AuthorGetViewModel> authorsView = Mapper.Map<IEnumerable<Author>, List<AuthorGetViewModel>>(authors);
 
-            Author author = MappAuthor(authorDTO);
+            _bookService = new BookService(_bookRepository);
+
+            for (int i = 0; i < authorsView.Count; i++)
+            {
+                IEnumerable<int> numberBooks = authors.ToList()[i].BookId;
+                authorsView[i].Books = GetBook(numberBooks);
+            }
+
+            return authorsView;
+        }
+
+        public void CreateAuthor(AuthorCreateViewModel authorView)
+        {
+            if (authorView == null)
+            {
+                throw new ValidationException(_exceptionDoesnotCreated, "");
+            }
+
+            Mapper.Initialize(a => a.CreateMap<AuthorCreateViewModel, Author>());
+            Author author = Mapper.Map<AuthorCreateViewModel, Author>(authorView);
             _authorRepository.Create(author);
         }
-        public void Update(AuthorDTO authorDTO)
+        public void Update(AuthorGetViewModel authorView)
         {
-            ValidExceptionCreated(authorDTO);
+            ValidExceptionCreated(authorView);
 
-            Author author = _authorRepository.Get(authorDTO.Id);
-
+            Author author = _authorRepository.Get(authorView.Id);
             ValidExceptionFound(author);
 
-            author = null;
-            author = MappAuthor(authorDTO);
-            _authorRepository.Update(author);
+            Mapper.Initialize(a => a.CreateMap<AuthorGetViewModel, Author>());
+            Author authorUpdate = Mapper.Map<AuthorGetViewModel, Author>(authorView);
+            _authorRepository.Update(authorUpdate);
         }
 
-        private void ValidExceptionCreated(AuthorDTO authorDTO)
+        private void ValidExceptionCreated(AuthorGetViewModel authorView)
         {
-            if (authorDTO == null)
+            if (authorView == null)
             {
                 throw new ValidationException(_exceptionDoesnotCreated, "");
             }
@@ -79,22 +111,15 @@ namespace Library.BLL.Services
             }
         }
 
-        private Author MappAuthor(AuthorDTO authorDTO)
+        public void Delete(AuthorGetViewModel authorView)
         {
-            Mapper.Initialize(a => a.CreateMap<AuthorDTO, Author>());
-            Author author = Mapper.Map<AuthorDTO, Author>(authorDTO);
-            return author;
-        }
+            ValidExceptionCreated(authorView);
 
-        public void Delete(AuthorDTO authorDTO)
-        {
-            ValidExceptionCreated(authorDTO);
-
-            Author author = _authorRepository.Get(authorDTO.Id);
+            Author author = _authorRepository.Get(authorView.Id);
 
             ValidExceptionFound(author);
 
-            _authorRepository.Delete(authorDTO.Id);
+            _authorRepository.Delete(authorView.Id);
         }
     }
 }
