@@ -10,76 +10,76 @@ using System.Data.Entity;
 
 namespace Library.Controllers
 {
-    public class AuthorService : IDisposable
-    {
-        private LibraryContext db;
+    //public class AuthorService : IDisposable
+    //{
+    //    private LibraryContext db;
 
-        public AuthorService(LibraryContext db)
-        {
-            this.db = db;
-        }
+    //    public AuthorService(LibraryContext db)
+    //    {
+    //        this.db = db;
+    //    }
 
-        public IEnumerable<Author> Read()
-        {
-            return db.Authors;  
-        }
+    //    public IEnumerable<Author> Read()
+    //    {
+    //        return db.Authors;  
+    //    }
 
-        public void Create(Author author)
-        {
-            var entity = new Author
-            {
-                Books = author.Books,
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                BirthDate = author.BirthDate,
-                DaiedDate = author.DaiedDate
-            };
+    //    public void Create(Author author)
+    //    {
+    //        var entity = new Author
+    //        {
+    //            Books = author.Books,
+    //            FirstName = author.FirstName,
+    //            LastName = author.LastName,
+    //            BirthDate = author.BirthDate,
+    //            DaiedDate = author.DaiedDate
+    //        };
 
-            db.Authors.Add(entity);
-            db.SaveChanges();
+    //        db.Authors.Add(entity);
+    //        db.SaveChanges();
 
-            author.Id = entity.Id;
-        }
+    //        author.Id = entity.Id;
+    //    }
 
-        public void Update(Author author)
-        {
-            var entity = new Author
-            {
-                Id = author.Id,
-                Books = author.Books,
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                BirthDate = author.BirthDate,
-                DaiedDate = author.DaiedDate
-            };
+    //    public void Update(Author author)
+    //    {
+    //        var entity = new Author
+    //        {
+    //            Id = author.Id,
+    //            Books = author.Books,
+    //            FirstName = author.FirstName,
+    //            LastName = author.LastName,
+    //            BirthDate = author.BirthDate,
+    //            DaiedDate = author.DaiedDate
+    //        };
 
-            db.Authors.Attach(entity);
-            db.Entry(entity).State = EntityState.Modified;
-            db.SaveChanges(); 
-        }
+    //        db.Authors.Attach(entity);
+    //        db.Entry(entity).State = EntityState.Modified;
+    //        db.SaveChanges(); 
+    //    }
 
-        public void Destroy(Author author)
-        {
-            var entity = new Author
-            {
-                Id = author.Id,
-                Books = author.Books,
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                BirthDate = author.BirthDate,
-                DaiedDate = author.DaiedDate
-            };
+    //    public void Destroy(Author author)
+    //    {
+    //        var entity = new Author
+    //        {
+    //            Id = author.Id,
+    //            Books = author.Books,
+    //            FirstName = author.FirstName,
+    //            LastName = author.LastName,
+    //            BirthDate = author.BirthDate,
+    //            DaiedDate = author.DaiedDate
+    //        };
 
-            db.Authors.Attach(entity);
-            db.Authors.Remove(entity);
-            db.SaveChanges();
-        }
+    //        db.Authors.Attach(entity);
+    //        db.Authors.Remove(entity);
+    //        db.SaveChanges();
+    //    }
 
-        public void Dispose()
-        {
-            db.Dispose();
-        }
-    }
+    //    public void Dispose()
+    //    {
+    //        db.Dispose();
+    //    }
+    //}
 
     public class AuthorController : Controller
     {

@@ -15,8 +15,5 @@ namespace Library.DAL.EF
         {
             Database.SetInitializer<LibraryContext>(new LibraryContextInitializer());
         }
-        public LibraryContext(string connectionString)
-            :base(connectionString)
-        {}
     }
 }
