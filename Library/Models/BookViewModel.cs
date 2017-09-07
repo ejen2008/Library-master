@@ -12,6 +12,6 @@ namespace Library.Models
         public int? NumberPages { get; set; }
         public int? DatePublishing { get; set; }
         public string PublishingCompany { get; set; }
-        public virtual ICollection<Author> Authors { get; set; }
+        public virtual ICollection<AuthorViewModel> Authors { get; set; }
     }
 }

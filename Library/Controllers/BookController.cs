@@ -1,145 +1,121 @@
-﻿using System;
-using System.Linq;
-using System.Data;
+﻿using AutoMapper;
+using Kendo.Mvc.Extensions;
+using Library.BLL.DTO;
+using Library.BLL.Services;
+using Library.DAL.EF;
+using Library.DAL.Repositories;
+using Library.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Kendo.Mvc.Extensions;
-using Library.Models;
-using System.Data.Entity;
 
 namespace Library.Controllers
 {
-    //public class BookService : IDisposable
-    //{
-    //    private LibraryContext db;
-
-    //    public BookService(LibraryContext db)
-    //    {
-    //        this.db = db;
-    //    }
-
-    //    public IEnumerable<Book> Read()
-    //    {
-    //        return db.Books;  
-    //    }
-
-    //    public void Create(Book book)
-    //    {
-    //        var entity = new Book
-    //        {
-    //            Authors = book.Authors,
-    //            NameBook = book.NameBook,
-    //            NumberPages = book.NumberPages,
-    //            DatePublishing = book.DatePublishing,
-    //            PublishingCompany = book.PublishingCompany
-    //        };
-
-    //        db.Books.Add(entity);
-    //        db.SaveChanges();
-
-    //        book.Id = entity.Id;
-    //    }
-
-    //    public void Update(Book book)
-    //    {
-    //        var entity = new Book
-    //        {
-    //            Id = book.Id,
-    //            Authors = book.Authors,
-    //            NameBook = book.NameBook,
-    //            NumberPages = book.NumberPages,
-    //            DatePublishing = book.DatePublishing,
-    //            PublishingCompany = book.PublishingCompany
-    //        };
-
-    //        db.Books.Attach(entity);
-    //        db.Entry(entity).State = EntityState.Modified;
-    //        db.SaveChanges(); 
-    //    }
-
-    //    public void Destroy(Book book)
-    //    {
-    //        var entity = new Book
-    //        {
-    //            Id = book.Id,
-    //            Authors = book.Authors,
-    //            NameBook = book.NameBook,
-    //            NumberPages = book.NumberPages,
-    //            DatePublishing = book.DatePublishing,
-    //            PublishingCompany = book.PublishingCompany
-    //        };
-
-    //        db.Books.Attach(entity);
-    //        db.Books.Remove(entity);
-    //        db.SaveChanges();
-    //    }
-
-    //    public void Dispose()
-    //    {
-    //        db.Dispose();
-    //    }
-    //}
-
     public class BookController : Controller
     {
-        private BookService bookService;
+        BookService _bookService;
+        AuthorService _authorService;
 
         public BookController()
         {
-            bookService = new BookService(new LibraryContext());
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            bookService.Dispose();
-
-            base.Dispose(disposing);
+            var context = new DAL.EF.LibraryContext();
+            _bookService = new BookService(new BookRepository(context));
+            _authorService = new AuthorService(new AuthorRepository(context));
         }
 
         public ActionResult Index()
         {
-            return View(bookService.Read());
+
+            IEnumerable<BookViewModel> booksView = GetBooksView();
+            return View(booksView);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Books_Create(Book book)
+        public ActionResult Books_Create(BookViewModel bookView)
         {
             if (ModelState.IsValid)
             {
-                bookService.Create(book);
+                BookDTO bookDTO = GetBookDTO(bookView);
+                _bookService.CreateBook(bookDTO);
 
                 RouteValueDictionary routeValues = this.GridRouteValues();
                 return RedirectToAction("Index", routeValues);
             }
-
-            return View("Index", bookService.Read());
+            IEnumerable<BookViewModel> booksView = GetBooksView();
+            return View("Index", booksView);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Books_Update(Book book)
+        [HttpPost]
+        public ActionResult BooksUpdate(BookViewModel bookView)
         {
             if (ModelState.IsValid)
             {
-                bookService.Update(book);
+                BookDTO bookDTO = GetBookDTO(bookView);
+                _bookService.Update(bookDTO);
 
                 RouteValueDictionary routeValues = this.GridRouteValues();
                 return RedirectToAction("Index", routeValues);
             }
-
-            return View("Index", bookService.Read());
+            IEnumerable<BookViewModel> booksView = GetBooksView();
+            return View("Index", booksView);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Books_Destroy(Book book)
+        public ActionResult Books_Destroy(BookViewModel bookView)
         {
             RouteValueDictionary routeValues;
-
-            bookService.Destroy(book);
-
+            BookDTO bookDTO = GetBookDTO(bookView);
+            _bookService.Update(bookDTO);
             routeValues = this.GridRouteValues();
-
             return RedirectToAction("Index", routeValues);
+        }
+
+        private BookViewModel GetBookView(BookDTO bookDTO)
+        {
+            Mapper.Initialize(b => b.CreateMap<BookDTO, BookViewModel>());
+            BookViewModel book = Mapper.Map<BookDTO, BookViewModel>(bookDTO);
+            return book;
+        }
+        private BookDTO GetBookDTO(BookViewModel bookView)
+        {
+            Mapper.Initialize(b => b.CreateMap<BookViewModel, BookDTO>());
+            BookDTO book = Mapper.Map<BookViewModel, BookDTO>(bookView);
+            return book;
+        }
+        private IEnumerable<BookViewModel> GetBooksView()
+        {
+            IEnumerable<BookDTO> booksDTO = _bookService.GetBooks();
+            var booksView = new List<BookViewModel>();
+            List<AuthorViewModel> authorsView = GetAuthorsView().ToList();
+
+            foreach (BookDTO book in booksDTO)
+            {
+                var bookV = GetBookView(book);
+                foreach (int idAuthor in book.AuthorId)
+                {
+                    bookV.Authors.Add(authorsView.Find(a => a.Id == idAuthor));
+                }
+                booksView.Add(bookV);
+            }
+            return booksView;
+        }
+        private IEnumerable<AuthorViewModel> GetAuthorsView()
+        {
+            IEnumerable<AuthorDTO> authorsDTO = _authorService.GetAuthors();
+            var authorView = new List<AuthorViewModel>();
+            foreach (AuthorDTO author in authorsDTO)
+            {
+                authorView.Add(MappAuthor(author));
+            }
+            return authorView;
+        }
+        private AuthorViewModel MappAuthor(AuthorDTO authorDTO)
+        {
+            Mapper.Initialize(a => a.CreateMap<AuthorDTO, AuthorViewModel>());
+            return Mapper.Map<AuthorDTO, AuthorViewModel>(authorDTO);
         }
     }
 }

@@ -1,145 +1,97 @@
-﻿using System;
-using System.Linq;
-using System.Data;
+﻿using AutoMapper;
+using Kendo.Mvc.Extensions;
+using Library.BLL.DTO;
+using Library.BLL.Services;
+using Library.DAL.Repositories;
+using Library.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Kendo.Mvc.Extensions;
-using Library.Models;
-using System.Data.Entity;
 
 namespace Library.Controllers
 {
-    //public class AuthorService : IDisposable
-    //{
-    //    private LibraryContext db;
-
-    //    public AuthorService(LibraryContext db)
-    //    {
-    //        this.db = db;
-    //    }
-
-    //    public IEnumerable<Author> Read()
-    //    {
-    //        return db.Authors;  
-    //    }
-
-    //    public void Create(Author author)
-    //    {
-    //        var entity = new Author
-    //        {
-    //            Books = author.Books,
-    //            FirstName = author.FirstName,
-    //            LastName = author.LastName,
-    //            BirthDate = author.BirthDate,
-    //            DaiedDate = author.DaiedDate
-    //        };
-
-    //        db.Authors.Add(entity);
-    //        db.SaveChanges();
-
-    //        author.Id = entity.Id;
-    //    }
-
-    //    public void Update(Author author)
-    //    {
-    //        var entity = new Author
-    //        {
-    //            Id = author.Id,
-    //            Books = author.Books,
-    //            FirstName = author.FirstName,
-    //            LastName = author.LastName,
-    //            BirthDate = author.BirthDate,
-    //            DaiedDate = author.DaiedDate
-    //        };
-
-    //        db.Authors.Attach(entity);
-    //        db.Entry(entity).State = EntityState.Modified;
-    //        db.SaveChanges(); 
-    //    }
-
-    //    public void Destroy(Author author)
-    //    {
-    //        var entity = new Author
-    //        {
-    //            Id = author.Id,
-    //            Books = author.Books,
-    //            FirstName = author.FirstName,
-    //            LastName = author.LastName,
-    //            BirthDate = author.BirthDate,
-    //            DaiedDate = author.DaiedDate
-    //        };
-
-    //        db.Authors.Attach(entity);
-    //        db.Authors.Remove(entity);
-    //        db.SaveChanges();
-    //    }
-
-    //    public void Dispose()
-    //    {
-    //        db.Dispose();
-    //    }
-    //}
-
     public class AuthorController : Controller
     {
-        private AuthorService authorService;
-
+        private AuthorService _authorService;
         public AuthorController()
         {
-            authorService = new AuthorService(new LibraryContext());
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            authorService.Dispose();
-
-            base.Dispose(disposing);
+            
+            _authorService = new AuthorService();
         }
 
         public ActionResult Index()
         {
-            return View(authorService.Read());
+            IEnumerable<AuthorViewModel> authorsView = GetAuthorsView();
+            return View(authorsView);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Authors_Create(Author author)
+        public ActionResult Authors_Create(AuthorViewModel authorView)
         {
             if (ModelState.IsValid)
             {
-                authorService.Create(author);
+                AuthorDTO authorDTO = GetAuthorDTO(authorView);
+                _authorService.CreateAuthor(authorDTO);
+
+                RouteValueDictionary routeValues = this.GridRouteValues();
+                return RedirectToAction("Index", routeValues);
+            }
+            IEnumerable<AuthorViewModel> authorsView = GetAuthorsView();
+            return View("Index", authorsView);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Authors_Update(AuthorViewModel authorView)
+        {
+            if (ModelState.IsValid)
+            {
+                AuthorDTO authorDTO = GetAuthorDTO(authorView);
+                _authorService.Update(authorDTO);
 
                 RouteValueDictionary routeValues = this.GridRouteValues();
                 return RedirectToAction("Index", routeValues);
             }
 
-            return View("Index", authorService.Read());
+            IEnumerable<AuthorViewModel> authorsView = GetAuthorsView();
+            return View("Index", authorsView);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Authors_Update(Author author)
-        {
-            if (ModelState.IsValid)
-            {
-                authorService.Update(author);
-
-                RouteValueDictionary routeValues = this.GridRouteValues();
-                return RedirectToAction("Index", routeValues);
-            }
-
-            return View("Index", authorService.Read());
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Authors_Destroy(Author author)
+        public ActionResult Authors_Destroy(AuthorViewModel authorView)
         {
             RouteValueDictionary routeValues;
-
-            authorService.Destroy(author);
-
+            AuthorDTO authorDTO = GetAuthorDTO(authorView);
+            _authorService.Update(authorDTO);
             routeValues = this.GridRouteValues();
-
             return RedirectToAction("Index", routeValues);
+        }
+
+
+
+        private IEnumerable<AuthorViewModel> GetAuthorsView()
+        {
+            IEnumerable<AuthorDTO> authorsDTO = _authorService.GetAuthors();
+            List<AuthorViewModel> authors = new List<AuthorViewModel>();
+            foreach (AuthorDTO author in authorsDTO)
+            {
+                authors.Add( GetAuthorView(author));
+            }
+            return authors;
+        }
+        private AuthorViewModel GetAuthorView(AuthorDTO authorDTO)
+        {
+            Mapper.Initialize(a => a.CreateMap<AuthorDTO, AuthorViewModel>());
+            AuthorViewModel author = Mapper.Map<AuthorDTO, AuthorViewModel>(authorDTO);
+            return author;
+        }
+        private AuthorDTO GetAuthorDTO(AuthorViewModel authorView)
+        {
+            Mapper.Initialize(a => a.CreateMap<AuthorViewModel, AuthorDTO>());
+            AuthorDTO author = Mapper.Map<AuthorViewModel, AuthorDTO>(authorView);
+            return author;
         }
     }
 }

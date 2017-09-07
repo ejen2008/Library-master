@@ -13,6 +13,8 @@ namespace Library.DAL.Entities
         public DateTime? BirthDate { get; set; }
         public DateTime? DaiedDate { get; set; }
         public DateTime? DateAdd { get; set; }
-        public virtual ICollection<Book> Books { get; set; }
+
+        public virtual ICollection<int?> BookId { get; set; }
+        //public virtual ICollection<Book> Books { get; set; }
     }
 }

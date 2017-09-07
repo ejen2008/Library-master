@@ -14,7 +14,7 @@ namespace Library.DAL.Entities
         public string PublishingCompany { get; set; }
         public DateTime? DateAdd { get; set; }
 
-        public virtual ICollection<Author> Authors { get; set; }
-
+        public int? AuthorId { get; set; }
+        //public virtual ICollection<Author> Authors { get; set; }
     }
 }

@@ -13,6 +13,6 @@ namespace Library.Models
 
         public DateTime? BirthDate { get; set; }
         public DateTime? DaiedDate { get; set; }
-        public virtual ICollection<Book> Books { get; set; }
+        public virtual ICollection<BookViewModel> Books { get; set; }
     }
 }

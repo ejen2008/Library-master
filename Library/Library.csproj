@@ -135,27 +135,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AuthorController.cs" />
-    <Compile Include="Controllers\AuthorViewController.cs" />
     <Compile Include="Controllers\BookController.cs" />
-    <Compile Include="Controllers\BookViewController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201709031912175_InitialCreate.cs" />
-    <Compile Include="Migrations\201709031912175_InitialCreate.Designer.cs">
-      <DependentUpon>201709031912175_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201709031924316_MigrateDB.cs" />
-    <Compile Include="Migrations\201709031924316_MigrateDB.Designer.cs">
-      <DependentUpon>201709031924316_MigrateDB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Author.cs" />
     <Compile Include="Models\AuthorViewModel.cs" />
-    <Compile Include="Models\Book.cs" />
     <Compile Include="Models\BookViewModel.cs" />
-    <Compile Include="Models\LibraryContext.cs" />
-    <Compile Include="Models\LibraryContextInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -218,18 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\AuthorView\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709031912175_InitialCreate.resx">
-      <DependentUpon>201709031912175_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201709031924316_MigrateDB.resx">
-      <DependentUpon>201709031924316_MigrateDB.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Library.BLL\Library.BLL.csproj">

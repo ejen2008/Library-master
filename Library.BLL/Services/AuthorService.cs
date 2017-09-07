@@ -18,6 +18,7 @@ namespace Library.BLL.Services
 
         public AuthorService(AuthorRepository repository)
         {
+            var rep = new AuthorRepository(new DAL.EF.LibraryContext());
             _authorRepository = repository;
         }
 

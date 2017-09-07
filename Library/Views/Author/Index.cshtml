@@ -1,6 +1,6 @@
 ﻿@using Library.Models
 @using System.Globalization
-@model IEnumerable<Author>
+@model IEnumerable<AuthorViewModel>
 
 @{
     ViewBag.Title = "List of Authors";
@@ -17,7 +17,7 @@
       columns.Bound(c => c.DaiedDate).Format("{0:MM/dd/yyyy}").Width(110);
       columns.Template(@<text>
             @{
-                foreach (Book b in item.Books)
+                foreach (BookViewModel b in item.Books)
                 {
                     @b.NameBook <br />
                 }
@@ -44,7 +44,7 @@
       .DataSource(dataSource => dataSource
         .Server()
         .PageSize(20)
-        .Model(model => model.Id(p => p.Id))
+        .Model(model => model.Id(p => p.Id.ToString()))
         .Read(read => read.Action("Index", "Author"))
         .Create("Authors_Create", "Author")
         .Update("Authors_Update", "Author")
