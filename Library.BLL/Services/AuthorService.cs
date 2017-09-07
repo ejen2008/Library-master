@@ -15,8 +15,7 @@ namespace Library.BLL.Services
     public class AuthorService
     {
         private AuthorRepository _authorRepository;
-        private BookRepository _bookRepository;
-        private BookService _bookService;
+
         private string _exceprionDosenotFound = "Author doesn't found";
         private string _exceptionDoesnotCreated = "Author doesn't created";
 
@@ -24,7 +23,6 @@ namespace Library.BLL.Services
         {
             var context = new DAL.EF.LibraryContext();
             _authorRepository = new AuthorRepository(context);
-            _bookRepository = new BookRepository(context);
         }
 
         public AuthorGetViewModel GetAuthor(int? id)
@@ -39,21 +37,8 @@ namespace Library.BLL.Services
 
             Mapper.Initialize(a => a.CreateMap<Author, AuthorGetViewModel>());
             AuthorGetViewModel authorView = Mapper.Map<Author, AuthorGetViewModel>(author);
-            authorView.Books = new List<BookGetViewModel>();
-
-            _bookService = new BookService(_bookRepository);
-            authorView.Books = GetBook(author.BookId);
 
             return authorView;
-        }
-        private List<BookGetViewModel> GetBook(IEnumerable<int> bookId)
-        {
-            var booksView = new List<BookGetViewModel>();
-            foreach (int idBook in bookId)
-            {
-                 booksView.Add(_bookService.GetBook(idBook));
-            }
-            return booksView;
         }
 
         public IEnumerable<AuthorGetViewModel> GetAuthors()
@@ -61,14 +46,6 @@ namespace Library.BLL.Services
             Mapper.Initialize(a => a.CreateMap<Author, AuthorGetViewModel>());
             IEnumerable<Author> authors = _authorRepository.GetAll();
             List<AuthorGetViewModel> authorsView = Mapper.Map<IEnumerable<Author>, List<AuthorGetViewModel>>(authors);
-
-            _bookService = new BookService(_bookRepository);
-
-            for (int i = 0; i < authorsView.Count; i++)
-            {
-                IEnumerable<int> numberBooks = authors.ToList()[i].BookId;
-                authorsView[i].Books = GetBook(numberBooks);
-            }
 
             return authorsView;
         }

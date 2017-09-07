@@ -16,6 +16,5 @@ namespace Library.DAL.EF
         {
             Database.SetInitializer<LibraryContext>(new LibraryContextInitializer());
         }
-
     }
 }

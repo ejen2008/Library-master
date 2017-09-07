@@ -8,18 +8,21 @@ using Library.DAL.EF;
 using Library.DAL.Repositories;
 using AutoMapper;
 using Library.ViewModels.BookViewModels;
+using Library.ViewModels.AuthorViewModels;
 
 namespace Library.BLL.Services
 {
     public class BookService
     {
         private BookRepository _bookRepository;
+
         private string _exceptionDoesnotCreated = "Book doesn't created";
         private string _exceprionDosenotFound = "Author doesn't found";
 
-        public BookService(BookRepository bookRepository)
+        public BookService()
         {
-            _bookRepository = bookRepository;
+            var context = new DAL.EF.LibraryContext();
+            _bookRepository = new BookRepository(context);
         }
 
         public BookGetViewModel GetBook(int? id)
@@ -28,7 +31,7 @@ namespace Library.BLL.Services
             {
                 throw new ValidationException("Don't installed id", "");
             }
-            var book = _bookRepository.Get(id.Value);
+            Book book = _bookRepository.Get(id.Value);
             if (book == null)
             {
                 throw new ValidationException("Book doesn't found", "");
