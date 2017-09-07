@@ -1,0 +1,50 @@
+﻿@using Library.Models
+@model IEnumerable<Book>
+
+@{
+    ViewBag.Title = "List of Books";
+}
+
+@(Html.Kendo().Grid(Model)
+      .Name("Grid")
+      .Columns(columns =>
+      {
+          columns.Bound(c => c.NameBook);
+          columns.Template(@<text>
+        @{
+            foreach (Author a in item.Authors)
+            {
+                @a.FirstName @a.LastName <br />
+            }
+        }
+        </text>).ClientTemplate("#=Books#").Title("Authors").Width(200);
+          columns.Bound(c => c.NumberPages).Width(100);
+          columns.Bound(c => c.DatePublishing).Width(100);
+          columns.Bound(c => c.PublishingCompany).Width(200);
+          columns.Command(command =>
+          {
+              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
+              command.Destroy().Text("Delete");
+          })
+              .Width(180);
+      })
+      .ToolBar(toolbar =>
+      {
+          toolbar.Create().Text("Add new book");
+      })
+      .Editable(editable => editable.Mode(GridEditMode.PopUp))
+      .Pageable()
+      .Sortable(sortable =>
+      {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Scrollable()
+      .DataSource(dataSource => dataSource
+        .Server()
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("Index", "Book"))
+        .Create("Books_Create", "Book")
+        .Update("Books_Update", "Book")
+        .Destroy("Books_Destroy", "Book")
+      )
+)

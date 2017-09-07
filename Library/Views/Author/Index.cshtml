@@ -1,0 +1,53 @@
+﻿@using Library.Models
+@using System.Globalization
+@model IEnumerable<Author>
+
+@{
+    ViewBag.Title = "List of Authors";
+}
+
+@(Html.Kendo().Grid(Model)
+      .Name("Grid")
+      .Columns(columns =>
+      {
+      columns.Template(@<text>@item.FirstName  @item.LastName</text>)
+                .ClientTemplate("#=FirstName# #=LastName#")
+                .Title("Name").Width(200);
+      columns.Bound(c => c.BirthDate).Format("{0:MM/dd/yyyy}").Width(110);
+      columns.Bound(c => c.DaiedDate).Format("{0:MM/dd/yyyy}").Width(110);
+      columns.Template(@<text>
+            @{
+                foreach (Book b in item.Books)
+                {
+                    @b.NameBook <br />
+                }
+            }
+          </text>).ClientTemplate("#=Books#").Title("Books");
+      columns.Command(command =>
+          {
+              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
+              command.Destroy().Text("Delete");
+          })
+          .Width(180);
+      })
+      .ToolBar(toolbar =>
+      {
+          toolbar.Create().Text("Add new author");
+      })
+      .Editable(editable => editable.Mode(GridEditMode.PopUp))
+      .Pageable()
+      .Sortable(sortable =>
+      {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Scrollable()
+      .DataSource(dataSource => dataSource
+        .Server()
+        .PageSize(20)
+        .Model(model => model.Id(p => p.Id))
+        .Read(read => read.Action("Index", "Author"))
+        .Create("Authors_Create", "Author")
+        .Update("Authors_Update", "Author")
+        .Destroy("Authors_Destroy", "Author")
+      )
+)
