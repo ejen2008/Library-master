@@ -45,7 +45,7 @@
         .Model(model => model.Id(p => p.Id.ToString()))
         .Read(read => read.Action("Index", "Book"))
         .Create("BooksCreate", "Book")
-        .Update("BooksUpdate", "Book")
+        .Update(update => update.Action("BooksUpdate", "Book"))
         .Destroy("BooksDestroy", "Book")
       )
 )

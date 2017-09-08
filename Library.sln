@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{C889C517-8A65-44FF-B1E7-B67ADA396A1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.WEB", "Library\Library.WEB.csproj", "{C889C517-8A65-44FF-B1E7-B67ADA396A1F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.DAL", "Library.DAL\Library.DAL.csproj", "{0F058D03-FF36-4153-81A9-115F9CA949CE}"
 EndProject
