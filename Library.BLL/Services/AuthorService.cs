@@ -48,11 +48,11 @@ namespace Library.BLL.Services
             List<Author> authors = _authorRepository.GetAll().ToList();
             List<AuthorGetViewModel> authorsView = Mapper.Map<List<Author>, List<AuthorGetViewModel>>(authors);
 
-            Mapper.Initialize(c => c.CreateMap<Author, AuthorGetViewModel>().ForMember(b => b.Books, opt => opt.Ignore()));
+            Mapper.Initialize(c => c.CreateMap<Book, BookGetViewModel>().ForMember(b => b.Authors, opt => opt.Ignore()));
+
             for (int i = 0; i < authors.Count; i++)
             {
-                
-                authorsView[i].Books = Mapper.Map<List<Book>, List<BookGetViewModel>>(authors[i].Books.ToList());
+                authorsView[i].Books = Mapper.Map<IEnumerable<Book>, IEnumerable<BookGetViewModel>>(authors[i].Books).ToList();
             }
 
             return authorsView;

@@ -1,6 +1,6 @@
-﻿@using Library.Models
-@using System.Globalization
-@model IEnumerable<AuthorViewModel>
+﻿@using Library.ViewModels.BookViewModels
+@using Library.ViewModels.AuthorViewModels
+@model IEnumerable<AuthorGetViewModel>
 
 @{
     ViewBag.Title = "List of Authors";
@@ -17,7 +17,7 @@
       columns.Bound(c => c.DaiedDate).Format("{0:MM/dd/yyyy}").Width(110);
       columns.Template(@<text>
             @{
-                foreach (BookViewModel b in item.Books)
+                foreach (BookGetViewModel b in item.Books)
                 {
                     @b.NameBook <br />
                 }
