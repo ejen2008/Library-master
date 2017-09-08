@@ -11,11 +11,12 @@ namespace Library.ViewModels.BookViewModels
     public class BookGetViewModel
     {
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string NameBook { get; set; }
+        public int? NumberPages { get; set; }
+        public int? DatePublishing { get; set; }
+        public string PublishingCompany { get; set; }
+        public DateTime? DateAdd { get; set; }
 
-        public DateTime? BirthDate { get; set; }
-        public DateTime? DaiedDate { get; set; }
-        public IEnumerable<AuthorGetViewModel> Authors { get; set; }
+        public virtual IEnumerable<AuthorGetViewModel> Authors { get; set; }
     }
 }

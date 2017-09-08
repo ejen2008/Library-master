@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Library.BLL.Infrastructure;
-using Library.DAL.Entities;
 using Library.DAL.Repositories;
+using Library.Domain.Entities;
 using Library.ViewModels.AuthorViewModels;
 using Library.ViewModels.BookViewModels;
 using System;
@@ -43,9 +43,17 @@ namespace Library.BLL.Services
 
         public IEnumerable<AuthorGetViewModel> GetAuthors()
         {
-            Mapper.Initialize(a => a.CreateMap<Author, AuthorGetViewModel>());
-            IEnumerable<Author> authors = _authorRepository.GetAll();
-            List<AuthorGetViewModel> authorsView = Mapper.Map<IEnumerable<Author>, List<AuthorGetViewModel>>(authors);
+            Mapper.Initialize(a => a.CreateMap<Author, AuthorGetViewModel>().ForMember(b =>b.Books, opt => opt.Ignore()));
+
+            List<Author> authors = _authorRepository.GetAll().ToList();
+            List<AuthorGetViewModel> authorsView = Mapper.Map<List<Author>, List<AuthorGetViewModel>>(authors);
+
+            Mapper.Initialize(c => c.CreateMap<Author, AuthorGetViewModel>().ForMember(b => b.Books, opt => opt.Ignore()));
+            for (int i = 0; i < authors.Count; i++)
+            {
+                
+                authorsView[i].Books = Mapper.Map<List<Book>, List<BookGetViewModel>>(authors[i].Books.ToList());
+            }
 
             return authorsView;
         }
@@ -88,15 +96,11 @@ namespace Library.BLL.Services
             }
         }
 
-        public void Delete(AuthorGetViewModel authorView)
+        public void Delete(int id)
         {
-            ValidExceptionCreated(authorView);
-
-            Author author = _authorRepository.Get(authorView.Id);
-
+            Author author = _authorRepository.Get(id);
             ValidExceptionFound(author);
-
-            _authorRepository.Delete(authorView.Id);
+            _authorRepository.Delete(id);
         }
     }
 }

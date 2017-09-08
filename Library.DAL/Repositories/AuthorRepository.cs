@@ -1,5 +1,5 @@
 ﻿using Library.DAL.EF;
-using Library.DAL.Entities;
+using Library.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

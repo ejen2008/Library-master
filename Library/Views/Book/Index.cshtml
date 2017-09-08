@@ -1,10 +1,9 @@
-﻿@using Library.Models
-@model IEnumerable<BookViewModel>
-
+﻿@using Library.ViewModels.BookViewModels
+@using Library.ViewModels.AuthorViewModels
+@model IEnumerable<BookGetViewModel>
 @{
     ViewBag.Title = "List of Books";
 }
-
 @(Html.Kendo().Grid(Model)
       .Name("Grid")
       .Columns(columns =>
@@ -12,7 +11,7 @@
           columns.Bound(c => c.NameBook);
           columns.Template(@<text>
         @{
-            foreach (AuthorViewModel a in item.Authors)
+            foreach (AuthorGetViewModel a in item.Authors)
             {
                 @a.FirstName @a.LastName <br />
             }
@@ -43,8 +42,8 @@
         .Server()
         .Model(model => model.Id(p => p.Id.ToString()))
         .Read(read => read.Action("Index", "Book"))
-        .Create("Books_Create", "Book")
-        .Update("Books_Update", "Book")
-        .Destroy("Books_Destroy", "Book")
+        .Create("BooksCreate", "Book")
+        .Update("BooksUpdate", "Book")
+        .Destroy("BooksDestroy", "Book")
       )
 )

@@ -139,8 +139,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AuthorViewModel.cs" />
-    <Compile Include="Models\BookViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -212,9 +210,9 @@
       <Project>{c127ff95-1664-41f4-9258-24915532712a}</Project>
       <Name>Library.BLL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Library.DAL\Library.DAL.csproj">
-      <Project>{0f058d03-ff36-4153-81a9-115f9ca949ce}</Project>
-      <Name>Library.DAL</Name>
+    <ProjectReference Include="..\Library.ViewModels\Library.ViewModels.csproj">
+      <Project>{3b60ce0f-40b2-49f7-ba4b-cc57787525c1}</Project>
+      <Name>Library.ViewModels</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

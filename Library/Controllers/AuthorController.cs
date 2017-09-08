@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Kendo.Mvc.Extensions;
-using Library.BLL.DTO;
 using Library.BLL.Services;
-using Library.DAL.Repositories;
-using Library.Models;
+using Library.ViewModels.AuthorViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,80 +16,46 @@ namespace Library.Controllers
         private AuthorService _authorService;
         public AuthorController()
         {
-            
             _authorService = new AuthorService();
         }
 
         public ActionResult Index()
         {
-            IEnumerable<AuthorViewModel> authorsView = GetAuthorsView();
+            IEnumerable<AuthorGetViewModel> authorsView = _authorService.GetAuthors();
             return View(authorsView);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Authors_Create(AuthorViewModel authorView)
+        [HttpPost]
+        public ActionResult AuthorCreate(AuthorCreateViewModel authorView)
         {
             if (ModelState.IsValid)
             {
-                AuthorDTO authorDTO = GetAuthorDTO(authorView);
-                _authorService.CreateAuthor(authorDTO);
-
-                RouteValueDictionary routeValues = this.GridRouteValues();
-                return RedirectToAction("Index", routeValues);
+                _authorService.CreateAuthor(authorView);
             }
-            IEnumerable<AuthorViewModel> authorsView = GetAuthorsView();
-            return View("Index", authorsView);
+            return RedirectToAction("Index");
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Authors_Update(AuthorViewModel authorView)
+        [HttpPost]
+        public ActionResult AuthorsUpdate(AuthorGetViewModel authorView)
         {
             if (ModelState.IsValid)
             {
-                AuthorDTO authorDTO = GetAuthorDTO(authorView);
-                _authorService.Update(authorDTO);
+                _authorService.Update(authorView);
 
-                RouteValueDictionary routeValues = this.GridRouteValues();
-                return RedirectToAction("Index", routeValues);
+                return RedirectToAction("Index");
             }
 
-            IEnumerable<AuthorViewModel> authorsView = GetAuthorsView();
-            return View("Index", authorsView);
+            return RedirectToAction("Index");
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Authors_Destroy(AuthorViewModel authorView)
+        [HttpPost]
+        public ActionResult AuthorsDestroy(AuthorGetViewModel authorView)
         {
-            RouteValueDictionary routeValues;
-            AuthorDTO authorDTO = GetAuthorDTO(authorView);
-            _authorService.Update(authorDTO);
-            routeValues = this.GridRouteValues();
-            return RedirectToAction("Index", routeValues);
-        }
-
-
-
-        private IEnumerable<AuthorViewModel> GetAuthorsView()
-        {
-            IEnumerable<AuthorDTO> authorsDTO = _authorService.GetAuthors();
-            List<AuthorViewModel> authors = new List<AuthorViewModel>();
-            foreach (AuthorDTO author in authorsDTO)
+            if (authorView.Id != 0)
             {
-                authors.Add( GetAuthorView(author));
+                _authorService.Delete(authorView.Id);
             }
-            return authors;
-        }
-        private AuthorViewModel GetAuthorView(AuthorDTO authorDTO)
-        {
-            Mapper.Initialize(a => a.CreateMap<AuthorDTO, AuthorViewModel>());
-            AuthorViewModel author = Mapper.Map<AuthorDTO, AuthorViewModel>(authorDTO);
-            return author;
-        }
-        private AuthorDTO GetAuthorDTO(AuthorViewModel authorView)
-        {
-            Mapper.Initialize(a => a.CreateMap<AuthorViewModel, AuthorDTO>());
-            AuthorDTO author = Mapper.Map<AuthorViewModel, AuthorDTO>(authorView);
-            return author;
+            return RedirectToAction("Index");
         }
     }
 }
