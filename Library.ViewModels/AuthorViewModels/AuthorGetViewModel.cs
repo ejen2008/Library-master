@@ -1,4 +1,5 @@
-﻿using Library.ViewModels.BookViewModels;
+﻿using Library.Domain.Entities;
+using Library.ViewModels.BookViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,7 @@ namespace Library.ViewModels.AuthorViewModels
 {
     public class AuthorGetViewModel
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-
-        public DateTime? BirthDate { get; set; }
-        public DateTime? DaiedDate { get; set; }
-        public List<BookGetViewModel> Books { get; set; }
+        public Author Author { get; set; }
+        public List<Book> Books { get; set; }
     }
 }

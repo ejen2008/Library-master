@@ -14,15 +14,14 @@ namespace Library.BLL.Services
 {
     public class BookService
     {
-        private BookRepository _bookRepository;
-
         private string _exceptionDoesnotCreated = "Book doesn't created";
         private string _exceprionDosenotFound = "Author doesn't found";
+        private AuthorInBookRepository _authorInBookRepository;
 
         public BookService()
         {
             var context = new DAL.EF.LibraryContext();
-            _bookRepository = new BookRepository(context);
+            _authorInBookRepository = new AuthorInBookRepository(context);
         }
 
         public BookGetViewModel GetBook(int? id)
@@ -31,64 +30,84 @@ namespace Library.BLL.Services
             {
                 throw new ValidationException("Don't installed id", "");
             }
-            Book book = _bookRepository.Get(id.Value);
-            if (book == null)
+            List<AuthorInBook> books = _authorInBookRepository.GetBook(id.Value).ToList();
+
+            ValidExceptionFound(books);
+
+            var bookView = books.GroupBy(x => x.Book.Id).Select(x => new BookGetViewModel()
             {
-                throw new ValidationException("Book doesn't found", "");
-            }
-            Mapper.Initialize(c => c.CreateMap<Book, BookGetViewModel>());
-            BookGetViewModel bookView = Mapper.Map<Book, BookGetViewModel>(book);
+                Book = x.First().Book,
+                Authors = x.Select(z => z.Author).ToList()
+            }).First();
 
             return bookView;
         }
 
         public IEnumerable<BookGetViewModel> GetBooks()
         {
-            Mapper.Initialize(c => c.CreateMap<Book, BookGetViewModel>().ForMember(b => b.Authors, opt => opt.Ignore()));
-
-            List<Book> books = _bookRepository.GetAll().ToList();
-            List<BookGetViewModel> booksView = Mapper.Map<List<Book>, List<BookGetViewModel>>(books);
-
-            Mapper.Initialize(c => c.CreateMap<Author, AuthorGetViewModel>().ForMember(a => a.Books, opt => opt.Ignore()));
-            for (int i = 0; i < books.Count; i++)
+            List<AuthorInBook> books = _authorInBookRepository.GetAll();
+            var getBooksViewModel = books.GroupBy(x => x.Id).Select(x => new BookGetViewModel()
             {
-                booksView[i].Authors = Mapper.Map<IEnumerable<Author>, IEnumerable<AuthorGetViewModel>>(books[i].Authors);
-            }
-            return booksView;
+                Book = x.FirstOrDefault()?.Book,
+                Authors = x.Select(z => z.Author).ToList()
+            });
+            return getBooksViewModel;
         }
 
-        public void CreateBook(BookCreateViewModel bookView)
+        public void CreateBook(BookGetViewModel bookView)
         {
             ValidExceptionCreated(bookView);
-            Mapper.Initialize(a => a.CreateMap<BookCreateViewModel, Book>());
-            Book book = Mapper.Map<BookCreateViewModel, Book>(bookView);
-            _bookRepository.Create(book);
-        }
-        public void Update(BookGetViewModel bookView)
-        {
-            if (bookView == null)
+
+            var authorInBook = new List<AuthorInBook>();
+            if (bookView.Authors.Count != 0)
             {
-                throw new ValidationException(_exceptionDoesnotCreated, "");
+                foreach (Author a in bookView.Authors)
+                {
+                    authorInBook.Add(new AuthorInBook { Author = a, Book = bookView.Book });
+                }
             }
 
-            Book book = _bookRepository.Get(bookView.Id);
+            if (bookView.Authors.Count == 0)
+            {
+                authorInBook.Add(new AuthorInBook { Book = bookView.Book });
+            }
 
-            ValidExceptionFound(book);
+            _authorInBookRepository.Create(authorInBook);
+        }
 
+        public void Update(BookGetViewModel bookView)
+        {
+            ValidExceptionCreated(bookView);
 
-            Mapper.Initialize(a => a.CreateMap<BookGetViewModel, Book>());
-            Book bookUpdate = Mapper.Map<BookGetViewModel, Book>(bookView);
-            _bookRepository.Update(bookUpdate);
+            List<AuthorInBook> bookInAuthor = _authorInBookRepository.GetBook(bookView.Book.Id).ToList();
+
+            ValidExceptionFound(bookInAuthor);
+
+            var updateBook = new List<AuthorInBook>();
+
+            if (bookView.Authors.Count != 0)
+            {
+                foreach (Author author in bookView.Authors)
+                {
+                    updateBook.Add(new AuthorInBook { Author = author, Book = bookView.Book, Id = bookInAuthor.First().Id });
+                }
+            }
+            if (bookView.Authors.Count == 0)
+            {
+                updateBook.Add(new AuthorInBook { Book = bookView.Book });
+            }
+
+            _authorInBookRepository.Update(updateBook);
         }
 
         public void Delete(int id)
         {
-            Book book = _bookRepository.Get(id);
-            ValidExceptionFound(book);
-            _bookRepository.Delete(id);
+            List<AuthorInBook> aBook = _authorInBookRepository.GetBook(id).ToList();
+            ValidExceptionFound(aBook);
+            _authorInBookRepository.Delete(aBook);
         }
 
-        private void ValidExceptionCreated(BookCreateViewModel bookView)
+        private void ValidExceptionCreated(BookGetViewModel bookView)
         {
             if (bookView == null)
             {
@@ -96,7 +115,7 @@ namespace Library.BLL.Services
             }
         }
 
-        private void ValidExceptionFound(Book book)
+        private void ValidExceptionFound(List<AuthorInBook> book)
         {
             if (book == null)
             {

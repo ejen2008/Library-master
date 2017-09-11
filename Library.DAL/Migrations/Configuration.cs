@@ -1,16 +1,26 @@
-﻿using Library.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-
-namespace Library.DAL.EF
+namespace Library.DAL.Migrations
 {
-    public class LibraryContextInitializer : DropCreateDatabaseAlways<LibraryContext>
+    using Library.Domain.Entities;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
+
+    internal sealed class Configuration : DbMigrationsConfiguration<Library.DAL.EF.LibraryContext>
     {
-        protected override void Seed(LibraryContext context)
+        public Configuration()
         {
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
+        }
+
+        protected override void Seed(Library.DAL.EF.LibraryContext context)
+        {
+            //  This method will be called after migrating to the latest version.
+
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  to avoid creating duplicate seed data.
             var evilHour = new Book
             {
                 NameBook = "In Evil Hour",
@@ -105,20 +115,8 @@ namespace Library.DAL.EF
                 Books = new List<Book>() { definitiveReference_5, definitiveReference_6 }
             };
 
-            context.Books.Add(evilHour);
-            context.Books.Add(authumn);
-            context.Books.Add(bluestEye);
-            context.Books.Add(beloved);
-            context.Books.Add(platform_Net3);
-            context.Books.Add(platform_Net4_6);
-            context.Books.Add(definitiveReference_5);
-            context.Books.Add(definitiveReference_6);
-
-            context.Authors.Add(gabrielGarcia);
-            context.Authors.Add(toniMorison);
-            context.Authors.Add(andrewTroelsen);
-            context.Authors.Add(josephAlbahari);
-            context.Authors.Add(benAlbahari);
+            context.Books.AddOrUpdate(evilHour, authumn, bluestEye, beloved, platform_Net3, platform_Net4_6, definitiveReference_5, definitiveReference_6);
+            context.Authors.AddOrUpdate(gabrielGarcia, toniMorison, andrewTroelsen, josephAlbahari, benAlbahari);
 
             context.SaveChanges();
         }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Library.Domain.Entities
 {
-    public class BookAuthor
+    public class AuthorInBook
     {
         public int Id { get; set; }
-        public int? BookId { get; set; }
-        public int? AuthorId { get; set; }
+        public virtual Book Book { get; set; }
+        public virtual Author Author { get; set; }
     }
 }

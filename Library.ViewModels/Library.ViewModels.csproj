@@ -53,5 +53,11 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Library.Domain\Library.Domain.csproj">
+      <Project>{ACA9E797-0072-4236-B7E1-F1232DAEF704}</Project>
+      <Name>Library.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

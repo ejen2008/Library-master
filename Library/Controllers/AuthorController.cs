@@ -26,7 +26,7 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public ActionResult AuthorCreate(AuthorCreateViewModel authorView)
+        public ActionResult Create(AuthorCreateViewModel authorView)
         {
             if (ModelState.IsValid)
             {
@@ -36,20 +36,18 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public ActionResult AuthorsUpdate(AuthorGetViewModel authorView)
+        public ActionResult Update(AuthorGetViewModel authorView)
         {
             if (ModelState.IsValid)
             {
                 _authorService.Update(authorView);
-
-                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult AuthorsDestroy(AuthorGetViewModel authorView)
+        public ActionResult Delete(AuthorGetViewModel authorView)
         {
             if (authorView.Id != 0)
             {

@@ -14,7 +14,5 @@ namespace Library.Domain.Entities
         public int? DatePublishing { get; set; }
         public string PublishingCompany { get; set; }
         public DateTime? DateAdd { get; set; }
-
-        public virtual ICollection<Author> Authors { get; set; }
     }
 }

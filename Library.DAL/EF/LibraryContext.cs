@@ -11,10 +11,16 @@ namespace Library.DAL.EF
     {
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
-        public DbSet<BookAuthor> BookAuthor { get; set; }
-        static LibraryContext()
-        {
-            Database.SetInitializer<LibraryContext>(new LibraryContextInitializer());
-        }
+        public DbSet<AuthorInBook> AuthorInBooks { get; set; }
+
+        //public LibraryContext()
+        //{
+        //    Database.SetInitializer(new MigrateDatabaseToLatestVersion<LibraryContext, Library.DAL.Migrations.Configuration>());
+        //}
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+        //}
     }
 }

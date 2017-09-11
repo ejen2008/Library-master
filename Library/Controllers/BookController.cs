@@ -27,7 +27,7 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public ActionResult BooksCreate(BookCreateViewModel bookView)
+        public ActionResult Create(BookCreateViewModel bookView)
         {
             if (ModelState.IsValid)
             {
@@ -37,7 +37,7 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public ActionResult BooksUpdate(BookGetViewModel bookView)
+        public ActionResult Update(BookGetViewModel bookView)
         {
             if (ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public ActionResult BooksDestroy(BookGetViewModel bookView)
+        public ActionResult Delete(BookGetViewModel bookView)
         {
             if (bookView.Id != 0)
             {

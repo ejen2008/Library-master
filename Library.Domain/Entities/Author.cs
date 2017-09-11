@@ -15,6 +15,6 @@ namespace Library.Domain.Entities
         public DateTime? DaiedDate { get; set; }
         public DateTime? DateAdd { get; set; }
 
-        public virtual ICollection<Book> Books { get; set; }
+        //public virtual ICollection<Book> Books { get; set; }
     }
 }
