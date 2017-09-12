@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Kendo.Mvc.Extensions;
 using Library.BLL.Services;
+using Library.Domain.Entities;
 using Library.ViewModels.AuthorViewModels;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,12 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(AuthorCreateViewModel authorView)
+        public ActionResult Create(AuthorGetViewModel authorView)
         {
+            if (authorView==null)
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
                 _authorService.CreateAuthor(authorView);
@@ -38,6 +43,10 @@ namespace Library.Controllers
         [HttpPost]
         public ActionResult Update(AuthorGetViewModel authorView)
         {
+            if (authorView == null)
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
                 _authorService.Update(authorView);
@@ -49,9 +58,13 @@ namespace Library.Controllers
         [HttpPost]
         public ActionResult Delete(AuthorGetViewModel authorView)
         {
-            if (authorView.Id != 0)
+            if (authorView == null)
             {
-                _authorService.Delete(authorView.Id);
+                return HttpNotFound();
+            }
+            if (authorView.Author.Id != 0)
+            {
+                _authorService.Delete(authorView.Author.Id);
             }
             return RedirectToAction("Index");
         }

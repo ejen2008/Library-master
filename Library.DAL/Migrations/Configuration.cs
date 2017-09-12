@@ -41,9 +41,19 @@ namespace Library.DAL.Migrations
                 LastName = "Gabriel Garcia",
                 BirthDate = new DateTime(1927, 3, 6),
                 DaiedDate = new DateTime(2014, 4, 17),
-                Books = new List<Book>() { evilHour, authumn }
             };
-
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook
+                {
+                    Author = gabrielGarcia,
+                    Book = evilHour
+                });
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook
+                {
+                    Author = gabrielGarcia,
+                    Book = authumn
+                });
             var bluestEye = new Book
             {
                 NameBook = "The Bluest Eye",
@@ -62,9 +72,20 @@ namespace Library.DAL.Migrations
             {
                 FirstName = "Toni",
                 LastName = "Morrison",
-                BirthDate = new DateTime(1931, 2, 18),
-                Books = new List<Book>() { bluestEye, beloved }
+                BirthDate = new DateTime(1931, 2, 18)
             };
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook
+                {
+                    Author = toniMorison,
+                    Book = bluestEye
+                });
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook
+                {
+                    Author = toniMorison,
+                    Book = beloved
+                });
 
             var platform_Net3 = new Book
             {
@@ -85,8 +106,17 @@ namespace Library.DAL.Migrations
                 FirstName = "Andrew",
                 LastName = "Troelsen",
                 BirthDate = new DateTime(1969, 4, 25),
-                Books = new List<Book>() { platform_Net3, platform_Net4_6 }
             };
+            context.AuthorInBooks.AddOrUpdate(new AuthorInBook
+            {
+                Author = andrewTroelsen,
+                Book = platform_Net3
+            });
+            context.AuthorInBooks.AddOrUpdate(new AuthorInBook
+            {
+                Author = andrewTroelsen,
+                Book = platform_Net4_6
+            });
 
             var definitiveReference_5 = new Book
             {
@@ -106,17 +136,33 @@ namespace Library.DAL.Migrations
             {
                 FirstName = "Joseph",
                 LastName = "Albahari",
-                Books = new List<Book>() { definitiveReference_5, definitiveReference_6 }
             };
             var benAlbahari = new Author
             {
                 FirstName = "Ben",
                 LastName = "Albahari",
-                Books = new List<Book>() { definitiveReference_5, definitiveReference_6 }
             };
-
-            context.Books.AddOrUpdate(evilHour, authumn, bluestEye, beloved, platform_Net3, platform_Net4_6, definitiveReference_5, definitiveReference_6);
-            context.Authors.AddOrUpdate(gabrielGarcia, toniMorison, andrewTroelsen, josephAlbahari, benAlbahari);
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook {
+                    Author = josephAlbahari,
+                    Book = definitiveReference_5
+                });
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook {
+                    Author = josephAlbahari,
+                    Book = definitiveReference_6
+                });
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook {
+                    Author = benAlbahari,
+                    Book = definitiveReference_5
+                });
+            context.AuthorInBooks.AddOrUpdate(
+                new AuthorInBook
+                {
+                    Author = benAlbahari,
+                    Book = definitiveReference_6
+                });
 
             context.SaveChanges();
         }

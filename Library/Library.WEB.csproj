@@ -134,8 +134,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\AuthorController.cs" />
     <Compile Include="Controllers\BookController.cs" />
+    <Compile Include="Controllers\JournalController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -201,6 +203,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Article\" />
+    <Folder Include="Views\Journal\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
@@ -209,6 +213,10 @@
     <ProjectReference Include="..\Library.BLL\Library.BLL.csproj">
       <Project>{c127ff95-1664-41f4-9258-24915532712a}</Project>
       <Name>Library.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Library.Domain\Library.Domain.csproj">
+      <Project>{ACA9E797-0072-4236-B7E1-F1232DAEF704}</Project>
+      <Name>Library.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Library.ViewModels\Library.ViewModels.csproj">
       <Project>{3b60ce0f-40b2-49f7-ba4b-cc57787525c1}</Project>

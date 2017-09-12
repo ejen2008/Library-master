@@ -13,6 +13,12 @@ namespace Library.DAL.EF
         public DbSet<Book> Books { get; set; }
         public DbSet<AuthorInBook> AuthorInBooks { get; set; }
 
+        public DbSet<Article> Article { get; set; }
+        public DbSet<AuthorInArticle> AuthorInArticle { get; set; }
+        
+        public DbSet<Journal> Journal { get; set; }
+        public DbSet<ArticleInJournal> ArticleInJournal { get; set; }
+
         //public LibraryContext()
         //{
         //    Database.SetInitializer(new MigrateDatabaseToLatestVersion<LibraryContext, Library.DAL.Migrations.Configuration>());

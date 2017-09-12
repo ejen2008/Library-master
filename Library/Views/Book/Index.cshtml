@@ -1,5 +1,6 @@
 ﻿@using Library.ViewModels.BookViewModels
 @using Library.ViewModels.AuthorViewModels
+@using Library.Domain.Entities
 @model IEnumerable<BookGetViewModel>
 @{
     ViewBag.Title = "List of Books";
@@ -8,18 +9,18 @@
       .Name("Grid")
       .Columns(columns =>
       {
-          columns.Bound(c => c.NameBook);
+          columns.Bound(c => c.Book.NameBook);
           columns.Template(@<text>
         @{
-            foreach (AuthorGetViewModel a in item.Authors)
+            foreach (Author a in item.Authors)
             {
                 @a.FirstName @a.LastName <br />
             }
         }
         </text>).ClientTemplate("#=Books#").Title("Authors").Width(200);
-          columns.Bound(c => c.NumberPages).Width(100);
-          columns.Bound(c => c.DatePublishing).Width(100);
-          columns.Bound(c => c.PublishingCompany).Width(200);
+          columns.Bound(c => c.Book.NumberPages).Width(100);
+          columns.Bound(c => c.Book.DatePublishing).Width(100);
+          columns.Bound(c => c.Book.PublishingCompany).Width(200);
           columns.Command(command =>
           {
               command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel").HtmlAttributes(new { style = "height: 30px;" });
@@ -42,7 +43,7 @@
       .DataSource(dataSource => dataSource
         .Server()
         .PageSize(20)
-        .Model(model => model.Id(p => p.Id.ToString()))
+        .Model(model => model.Id(p => p.Book.Id.ToString()))
         .Read(read => read.Action("Index", "Book"))
         .Create("Create", "Book")
         .Update(update => update.Action("Update", "Book"))

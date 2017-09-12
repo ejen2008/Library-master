@@ -14,8 +14,6 @@ namespace Library.BLL.Services
 {
     public class BookService
     {
-        private string _exceptionDoesnotCreated = "Book doesn't created";
-        private string _exceprionDosenotFound = "Author doesn't found";
         private AuthorInBookRepository _authorInBookRepository;
 
         public BookService()
@@ -24,22 +22,18 @@ namespace Library.BLL.Services
             _authorInBookRepository = new AuthorInBookRepository(context);
         }
 
-        public BookGetViewModel GetBook(int? id)
+        public BookGetViewModel GetBook(int id)
         {
-            if (id == null)
+            List<AuthorInBook> books = _authorInBookRepository.GetBook(id).ToList();
+            var bookView = new BookGetViewModel();
+            if (books != null)
             {
-                throw new ValidationException("Don't installed id", "");
+                bookView = books.GroupBy(x => x.Book.Id).Select(x => new BookGetViewModel()
+                {
+                    Book = x.First().Book,
+                    Authors = x.Select(z => z.Author).ToList()
+                }).First();
             }
-            List<AuthorInBook> books = _authorInBookRepository.GetBook(id.Value).ToList();
-
-            ValidExceptionFound(books);
-
-            var bookView = books.GroupBy(x => x.Book.Id).Select(x => new BookGetViewModel()
-            {
-                Book = x.First().Book,
-                Authors = x.Select(z => z.Author).ToList()
-            }).First();
-
             return bookView;
         }
 
@@ -56,8 +50,6 @@ namespace Library.BLL.Services
 
         public void CreateBook(BookGetViewModel bookView)
         {
-            ValidExceptionCreated(bookView);
-
             var authorInBook = new List<AuthorInBook>();
             if (bookView.Authors.Count != 0)
             {
@@ -71,55 +63,45 @@ namespace Library.BLL.Services
             {
                 authorInBook.Add(new AuthorInBook { Book = bookView.Book });
             }
-
             _authorInBookRepository.Create(authorInBook);
         }
 
         public void Update(BookGetViewModel bookView)
         {
-            ValidExceptionCreated(bookView);
-
             List<AuthorInBook> bookInAuthor = _authorInBookRepository.GetBook(bookView.Book.Id).ToList();
 
-            ValidExceptionFound(bookInAuthor);
+            if (bookInAuthor != null)
+            {
+                List<AuthorInBook> updateBook = CreateAuthorInBook(bookView, bookInAuthor.First().Id);
 
+                _authorInBookRepository.Update(updateBook);
+            }
+        }
+
+        private List<AuthorInBook> CreateAuthorInBook(BookGetViewModel bookView, int IdAuthorInBook)
+        {
             var updateBook = new List<AuthorInBook>();
 
             if (bookView.Authors.Count != 0)
             {
                 foreach (Author author in bookView.Authors)
                 {
-                    updateBook.Add(new AuthorInBook { Author = author, Book = bookView.Book, Id = bookInAuthor.First().Id });
+                    updateBook.Add(new AuthorInBook { Author = author, Book = bookView.Book, Id = IdAuthorInBook });
                 }
             }
             if (bookView.Authors.Count == 0)
             {
                 updateBook.Add(new AuthorInBook { Book = bookView.Book });
             }
-
-            _authorInBookRepository.Update(updateBook);
+            return updateBook;
         }
 
         public void Delete(int id)
         {
             List<AuthorInBook> aBook = _authorInBookRepository.GetBook(id).ToList();
-            ValidExceptionFound(aBook);
-            _authorInBookRepository.Delete(aBook);
-        }
-
-        private void ValidExceptionCreated(BookGetViewModel bookView)
-        {
-            if (bookView == null)
+            if (aBook != null)
             {
-                throw new ValidationException(_exceptionDoesnotCreated, "");
-            }
-        }
-
-        private void ValidExceptionFound(List<AuthorInBook> book)
-        {
-            if (book == null)
-            {
-                throw new ValidationException(_exceprionDosenotFound, "");
+                _authorInBookRepository.Delete(aBook);
             }
         }
     }

@@ -40,9 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Article.cs" />
+    <Compile Include="Entities\ArticleInJournal.cs" />
     <Compile Include="Entities\Author.cs" />
+    <Compile Include="Entities\AuthorInArticle.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Entities\AuthorInBook.cs" />
+    <Compile Include="Entities\Journal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

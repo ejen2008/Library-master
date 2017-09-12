@@ -13,7 +13,7 @@ namespace Library.Controllers
 {
     public class BookController : Controller
     {
-        BookService _bookService;
+        private BookService _bookService;
 
         public BookController()
         {
@@ -27,8 +27,12 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(BookCreateViewModel bookView)
+        public ActionResult Create(BookGetViewModel bookView)
         {
+            if (bookView == null)
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
                 _bookService.CreateBook(bookView);
@@ -39,6 +43,10 @@ namespace Library.Controllers
         [HttpPost]
         public ActionResult Update(BookGetViewModel bookView)
         {
+            if (bookView == null)
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
                 _bookService.Update(bookView);
@@ -49,9 +57,13 @@ namespace Library.Controllers
         [HttpPost]
         public ActionResult Delete(BookGetViewModel bookView)
         {
-            if (bookView.Id != 0)
+            if (bookView == null)
             {
-                _bookService.Delete(bookView.Id);
+                return HttpNotFound();
+            }
+            if (bookView.Book.Id != 0)
+            {
+                _bookService.Delete(bookView.Book.Id);
             }
             return RedirectToAction("Index");
         }

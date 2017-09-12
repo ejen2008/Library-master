@@ -30,22 +30,20 @@ namespace Library.DAL.Repositories
 
         public void Create(IEnumerable<AuthorInBook> authorInBook)
         {
-            foreach (AuthorInBook aBook in authorInBook)
-            {
-                _dbLibrary.AuthorInBooks.Add(aBook);
-            }
+            _dbLibrary.AuthorInBooks.AddRange(authorInBook);
             _dbLibrary.SaveChanges();
         }
 
-        public void Update(IEnumerable<AuthorInBook>authorInBook)
+        public void Update(IEnumerable<AuthorInBook> authorInBook)
         {
             _dbLibrary.Entry(authorInBook).State = EntityState.Modified;
             _dbLibrary.SaveChanges();
         }
 
-        public void Delete(IEnumerable <AuthorInBook> authorInBook)
+        public void Delete(IEnumerable<AuthorInBook> authorInBook)
         {
             _dbLibrary.AuthorInBooks.RemoveRange(authorInBook);
+            _dbLibrary.SaveChanges();
         }
 
         public IEnumerable<AuthorInBook> GetAuthor(int IdAuthor)
