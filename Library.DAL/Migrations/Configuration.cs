@@ -2,7 +2,6 @@ namespace Library.DAL.Migrations
 {
     using Library.Domain.Entities;
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -13,6 +12,7 @@ namespace Library.DAL.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+
         }
 
         protected override void Seed(Library.DAL.EF.LibraryContext context)
@@ -21,6 +21,14 @@ namespace Library.DAL.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
+            CreateBooks(context);
+            CreateJournals(context);
+
+            context.SaveChanges();
+        }
+
+        private void CreateBooks(Library.DAL.EF.LibraryContext context)
+        {
             var evilHour = new Book
             {
                 NameBook = "In Evil Hour",
@@ -143,17 +151,20 @@ namespace Library.DAL.Migrations
                 LastName = "Albahari",
             };
             context.AuthorInBooks.AddOrUpdate(
-                new AuthorInBook {
+                new AuthorInBook
+                {
                     Author = josephAlbahari,
                     Book = definitiveReference_5
                 });
             context.AuthorInBooks.AddOrUpdate(
-                new AuthorInBook {
+                new AuthorInBook
+                {
                     Author = josephAlbahari,
                     Book = definitiveReference_6
                 });
             context.AuthorInBooks.AddOrUpdate(
-                new AuthorInBook {
+                new AuthorInBook
+                {
                     Author = benAlbahari,
                     Book = definitiveReference_5
                 });
@@ -163,8 +174,16 @@ namespace Library.DAL.Migrations
                     Author = benAlbahari,
                     Book = definitiveReference_6
                 });
-
-            context.SaveChanges();
+        }
+        private void CreateJournals(Library.DAL.EF.LibraryContext context)
+        {
+            var newYorkTimes = new Journal() { NameJornal = "New York Times", NumberPage = 30, DatePublishing = DateTime.Now};
+            var newYorkToday = new Article() {  Title = "New York Today", DatePublishing = DateTime.Now, Content = "New York Today" };
+            var amazon = new Article() {Title ="Amazon Today", DatePublishing = DateTime.Now, Content = "amazon" };
+            context.ArticleInJournal.Add(new ArticleInJournal() { Journal = newYorkTimes, Article = newYorkToday});
+            context.ArticleInJournal.Add(new ArticleInJournal() { Journal = newYorkTimes, Article = amazon});
+            context.AuthorInArticle.Add(new AuthorInArticle() { Article = newYorkToday, Author = context.Authors.First() });
+            context.AuthorInArticle.Add(new AuthorInArticle() { Article = amazon, Author = context.Authors.First()});
         }
     }
 }

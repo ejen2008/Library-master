@@ -9,6 +9,7 @@ namespace Library.Domain.Entities
     public class Article
     {
         public int Id { get; set; }
+        public string Title { get; set; }
         public DateTime? DatePublishing { get; set; }
         public string Content { get; set; }
     }

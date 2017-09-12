@@ -19,14 +19,14 @@ namespace Library.DAL.EF
         public DbSet<Journal> Journal { get; set; }
         public DbSet<ArticleInJournal> ArticleInJournal { get; set; }
 
-        //public LibraryContext()
-        //{
-        //    Database.SetInitializer(new MigrateDatabaseToLatestVersion<LibraryContext, Library.DAL.Migrations.Configuration>());
-        //}
+        public LibraryContext()
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<LibraryContext, Library.DAL.Migrations.Configuration>());
+        }
 
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-        //}
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
