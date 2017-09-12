@@ -43,10 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArticleViewModel\ArticleGetViewModel.cs" />
+    <Compile Include="ArticleViewModels\ArticleGetViewModel.cs" />
     <Compile Include="AuthorViewModels\AuthorGetViewModel.cs" />
     <Compile Include="BookViewModels\BookGetViewModel.cs" />
-    <Compile Include="JournalViewModel\JournalGetViewModel.cs" />
+    <Compile Include="JournalViewModels\JournalGetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using Library.BLL.Services;
-using Library.ViewModels.ArticleViewModel;
+using Library.ViewModels.ArticleViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

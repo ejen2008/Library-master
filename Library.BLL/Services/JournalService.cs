@@ -1,6 +1,6 @@
 ﻿using Library.DAL.Repositories;
 using Library.Domain.Entities;
-using Library.ViewModels.JournalViewModel;
+using Library.ViewModels.JournalViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

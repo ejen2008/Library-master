@@ -40,7 +40,7 @@ namespace Library.BLL.Services
         public IEnumerable<AuthorGetViewModel> GetAuthors()
         {
             List<AuthorInBook> authors = _authorInBookRepository.GetAll();
-            var getAuthorsViewModel = authors.GroupBy(a => a.Id).Select(x => new AuthorGetViewModel()
+            var getAuthorsViewModel = authors.GroupBy(a => a.Author.Id).Select(x => new AuthorGetViewModel()
             {
                 Author = x.FirstOrDefault()?.Author,
                 Books = x.Select(z => z.Book).ToList()

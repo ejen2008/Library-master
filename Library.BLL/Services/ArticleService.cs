@@ -1,6 +1,6 @@
 ﻿using Library.DAL.Repositories;
 using Library.Domain.Entities;
-using Library.ViewModels.ArticleViewModel;
+using Library.ViewModels.ArticleViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,7 @@ namespace Library.BLL.Services
         {
             var context = new DAL.EF.LibraryContext();
             _authorInArticleRepository = new AuthorInArticleRepository(context);
+            _articleInJournalRepository = new ArticleInJournalRepository(context);
         }
 
         public ArticleGetViewModel GetArticle(int id)

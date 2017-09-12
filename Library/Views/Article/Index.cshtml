@@ -1,0 +1,51 @@
+﻿@using Library.ViewModels.ArticleViewModels
+@using Library.Domain.Entities
+@model IEnumerable<ArticleGetViewModel>
+@{
+    ViewBag.Title = "List of Articles";
+}
+@(Html.Kendo().Grid(Model)
+      .Name("Grid")
+      .Columns(columns =>
+      {
+      columns.Bound(c => c.Article.Title).Width(110);
+      columns.Bound(c => c.Article.DatePublishing).Format("{0:MM/dd/yyyy}").Width(110);
+
+      columns.Template(@<text>
+        @{
+            foreach (Author a in item.Authors)
+            {
+                @a.FirstName @a.LastName <br />
+            }
+        }
+    </text>).ClientTemplate("#=Books#").Title("Books");
+          columns.Command(command =>
+          {
+              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
+              command.Destroy().Text("Delete");
+          })
+              .Width(180);
+      })
+      .ToolBar(toolbar =>
+      {
+          toolbar.Create().Text("Add new article");
+      })
+      .Editable(editable => editable.Mode(GridEditMode.PopUp))
+      .HtmlAttributes(new { style = "height: 650px;" })
+      .Pageable()
+      .Sortable(sortable =>
+      {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Scrollable()
+      .DataSource(dataSource => dataSource
+        .Server()
+        .PageSize(20)
+        .Model(model => model.Id(p => p.Article.Id.ToString()))
+        .Read(read => read.Action("Index", "Article"))
+        .Create("Create", "Article")
+        .Update("Update", "Article")
+        .Destroy("Delete", "Article")
+      )
+)
+

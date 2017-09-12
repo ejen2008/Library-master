@@ -1,5 +1,4 @@
-﻿@using Library.ViewModels.BookViewModels
-@using Library.ViewModels.AuthorViewModels
+﻿@using Library.ViewModels.AuthorViewModels
 @using Library.Domain.Entities
 
 @model IEnumerable<AuthorGetViewModel>
@@ -37,6 +36,7 @@
           toolbar.Create().Text("Add new author");
       })
       .Editable(editable => editable.Mode(GridEditMode.PopUp))
+      .HtmlAttributes(new { style = "height: 650px;" })
       .Pageable()
       .Sortable(sortable =>
       {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library.ViewModels.JournalViewModel
+namespace Library.ViewModels.JournalViewModels
 {
     public class JournalGetViewModel
     {

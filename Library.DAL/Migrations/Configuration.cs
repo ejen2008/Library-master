@@ -22,7 +22,6 @@ namespace Library.DAL.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
             CreateBooks(context);
-            CreateJournals(context);
 
             context.SaveChanges();
         }
@@ -174,16 +173,14 @@ namespace Library.DAL.Migrations
                     Author = benAlbahari,
                     Book = definitiveReference_6
                 });
-        }
-        private void CreateJournals(Library.DAL.EF.LibraryContext context)
-        {
-            var newYorkTimes = new Journal() { NameJornal = "New York Times", NumberPage = 30, DatePublishing = DateTime.Now};
-            var newYorkToday = new Article() {  Title = "New York Today", DatePublishing = DateTime.Now, Content = "New York Today" };
-            var amazon = new Article() {Title ="Amazon Today", DatePublishing = DateTime.Now, Content = "amazon" };
-            context.ArticleInJournal.Add(new ArticleInJournal() { Journal = newYorkTimes, Article = newYorkToday});
-            context.ArticleInJournal.Add(new ArticleInJournal() { Journal = newYorkTimes, Article = amazon});
-            context.AuthorInArticle.Add(new AuthorInArticle() { Article = newYorkToday, Author = context.Authors.First() });
-            context.AuthorInArticle.Add(new AuthorInArticle() { Article = amazon, Author = context.Authors.First()});
+
+            var newYorkTimes = new Journal() { NameJornal = "New York Times", NumberPage = 30, DatePublishing = DateTime.Now };
+            var newYorkToday = new Article() { Title = "New York Today", DatePublishing = DateTime.Now, Content = "New York Today" };
+            var amazon = new Article() { Title = "Amazon Today", DatePublishing = DateTime.Now, Content = "amazon" };
+            context.ArticleInJournal.Add(new ArticleInJournal() { Journal = newYorkTimes, Article = newYorkToday });
+            context.ArticleInJournal.Add(new ArticleInJournal() { Journal = newYorkTimes, Article = amazon });
+            context.AuthorInArticle.Add(new AuthorInArticle() { Article = newYorkToday, Author = gabrielGarcia });
+            context.AuthorInArticle.Add(new AuthorInArticle() { Article = amazon, Author = toniMorison });
         }
     }
 }
