@@ -4,27 +4,30 @@
 @{
     ViewBag.Title = "List of journals";
 }
+
+
 @(Html.Kendo().Grid(Model)
       .Name("Grid")
       .Columns(columns =>
       {
-      columns.Bound(c => c.Juornal.NameJornal);
-      columns.Bound(c => c.Juornal.DatePublishing).Format("{0:MM/dd/yyyy}").Width(110);
-      columns.Bound(c => c.Juornal.NumberPage).Width(110);
-      columns.Template(@<text>
+          columns.Bound(c => c.Juornal.NameJornal);
+          columns.Template(@<text>
         @{
-            foreach (Article b in item.Articles)
+            foreach (Article a in item.Articles)
             {
-                @b.Title <br />
+                @a.Title <br/>
             }
         }
-    </text>).ClientTemplate("#=Articles#").Title("Articles");
-            columns.Command(command =>
-            {
-                command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
-                command.Destroy().Text("Delete");
-            })
-                .Width(180);
+        </text>).ClientTemplate("#=Articles#").Title("Articles").Width(200);
+          columns.Bound(c => c.Juornal.NumberPage).Width(100);
+          columns.Bound(c => c.Juornal.DatePublishing).Format("{0:MM/yyyy}").Width(100);
+
+          columns.Command(command =>
+          {
+              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel").HtmlAttributes(new { style = "height: 30px;" });
+              command.Destroy().Text("Delete");
+          })
+              .Width(180);
       })
       .ToolBar(toolbar =>
       {
@@ -40,9 +43,8 @@
       .Scrollable()
       .DataSource(dataSource => dataSource
         .Server()
-        .PageSize(20)
         .Model(model => model.Id(p => p.Juornal.Id))
-        .Read(read => read.Action("Index", "Juornal"))
+        .Read(read => read.Action("Index", "Journal"))
         .Create("Create", "Journal")
         .Update("Update", "Journal")
         .Destroy("Delete", "Journal")
