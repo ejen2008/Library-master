@@ -27,7 +27,6 @@ namespace Library.DAL.Repositories
         }
         public void Create(Book book)
         {
-            //book.DateAdd = DateTime.Now;
             _dbLibrary.Books.Add(book);
         }
         public void Update(Book book)

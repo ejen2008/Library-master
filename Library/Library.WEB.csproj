@@ -195,6 +195,7 @@
     <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Views\Article\Index.cshtml" />
     <Content Include="Views\Journal\Index.cshtml" />
+    <Content Include="Views\Book\AutoComplete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />

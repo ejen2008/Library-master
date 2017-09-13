@@ -1,0 +1,58 @@
+﻿@using Library.ViewModels.BookViewModels
+@using Library.ViewModels.AuthorViewModels
+@using Library.Domain.Entities
+@model IEnumerable<string>
+@{
+    ViewBag.Title = "AutoComplete";
+}
+
+<h2>AutoComplete</h2>
+
+
+
+<div class="demo-section k-content">
+    <h4>@Html.Label("countries", "Choose shipping countries:")</h4>
+
+    @(Html.Kendo().AutoComplete()
+          .Name("Books")
+          .Filter("startswith")
+          .Placeholder("Select book...")
+          .BindTo(Model)
+          .Separator(", ")
+    )
+
+    <div class="demo-hint">Start typing the name of an European country</div>
+
+</div>
+
+<div class="demo-section k-content">
+    <h4>Products</h4>
+
+    @(Html.Kendo().MultiSelect()
+          .Name("products")
+          .DataTextField("ProductName")
+          .DataValueField("ProductID")
+          .Placeholder("Select products...")
+          .AutoBind(false)
+          //.Value(new[] { new { ProductName = "Chang", ProductID = 2 }, new { ProductName = "Uncle Bob's Organic Dried Pears", ProductID = 7 } })
+          .DataSource(source =>
+          {
+              source.Read(read =>
+              {
+                  read.Action("GetData", "Book");
+              })
+              .ServerFiltering(true);
+          })
+    )
+</div>
+
+
+
+
+
+<style>
+    .k-autocomplete {
+        width: 100%;
+    }
+</style>
+

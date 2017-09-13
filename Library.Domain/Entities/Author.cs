@@ -13,8 +13,5 @@ namespace Library.Domain.Entities
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime? DaiedDate { get; set; }
-        //public DateTime? DateAdd { get; set; }
-
-        //public virtual ICollection<Book> Books { get; set; }
     }
 }

@@ -5,3 +5,8 @@ http://www.entityframeworktutorial.net/code-first/automated-migration-in-code-fi
 
 Cannot attach the file *.mdf as database
 https://stackoverflow.com/questions/17012839/cannot-attach-the-file-mdf-as-database
+
+Hidden pole
+[ScaffoldColumn(false)]
+public int ProductID
+http://www.telerik.com/forums/how-to-hide-model-id-in-mvc-grid-edit-popup

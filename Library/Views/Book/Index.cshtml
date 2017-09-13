@@ -1,11 +1,10 @@
-﻿@using Library.ViewModels.BookViewModels
+﻿@*@using Library.ViewModels.BookViewModels
 @using Library.ViewModels.AuthorViewModels
 @using Library.Domain.Entities
 @model IEnumerable<BookGetViewModel>
 @{
     ViewBag.Title = "List of Books";
 }
-
 @(Html.Kendo().Grid(Model)
       .Name("Grid")
       .Columns(columns =>
@@ -31,12 +30,9 @@
           })
               .Width(180);
       })
-      .ToolBar(toolbar =>
-      {
-          toolbar.Create().Text("Add new book");
-      })
+      .ToolBar(toolbar =>toolbar.Create().Text("Add new book"))
       .Editable(editable => editable.Mode(GridEditMode.PopUp))
-      .HtmlAttributes(new { style = "height: 650px;" })
+      .HtmlAttributes(new { style = "height: 630px;" })
       .Pageable()
       .Sortable(sortable =>
       {
@@ -44,11 +40,124 @@
       })
       .Scrollable()
       .DataSource(dataSource => dataSource
-        .Server()
-        .Model(model => model.Id(p => p.Book.Id))
-        .Read(read => read.Action("Index", "Book"))
-        .Create("Create", "Book")
-        .Update("Update", "Book")
-        .Destroy("Delete", "Book")
+      .Server()
+      .Model(model => model.Id(p => p.Book.Id))
+      .Read(read => read.Action("Index", "Book"))
+      .Create("Create", "Book")
+      .Update("Update", "Book")
+      .Destroy("Delete", "Book")
+
+      //.Ajax()
+      //.Events(events => events.Error("error_handler"))
+      //.Model(model => model.Id(p => p.Book.Id))
+      //.Create(update => update.Action("Create", "Book"))
+      //.Read(read => read.Action("Load", "Book"))
+      //.Update(update => update.Action("Update", "Book"))
+      //.Destroy(update => update.Action("Delete", "Book"))
       )
 )
+
+
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>*@
+
+
+
+
+
+
+@using Library.ViewModels.BookViewModels
+@using Library.ViewModels.AuthorViewModels
+@using Library.Domain.Entities
+@using Library.Controllers
+
+@model IEnumerable<BookView>
+@{
+    ViewBag.Title = "List of Books";
+}
+@(Html.Kendo().Grid(Model)
+      .Name("Grid")
+      .Columns(columns =>
+      {
+      columns.Bound(c => c.NameBook);
+          @*columns.Template(@<text>
+        @{
+            foreach (Author a in item.Authors)
+            {
+                @a.FirstName
+                <i>&nbsp;</i>
+                @a.LastName <br />
+            }
+        }
+        </text>).ClientTemplate("#=Authors#").Title("Authors").Width(200);*@
+          columns.Bound(c => c.NumberPages).Width(100);
+          columns.Bound(c => c.DatePublishing).Width(100);
+          columns.Bound(c => c.PublishingCompany).Width(200);
+          columns.Command(command =>
+          {
+              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel").HtmlAttributes(new { style = "height: 30px;" });
+              command.Destroy().Text("Delete");
+          })
+              .Width(180);
+      })
+      .ToolBar(toolbar => toolbar.Create().Text("Add new book"))
+      .Editable(editable => editable.Mode(GridEditMode.PopUp))
+      .HtmlAttributes(new { style = "height: 630px;" })
+      .Pageable()
+      .Sortable(sortable =>
+      {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Scrollable()
+      .DataSource(dataSource => dataSource
+      .Server()
+      .Model(model => model.Id(p => p.Id))
+      .Read(read => read.Action("Index", "Book"))
+      .Create("Create", "Book")
+      .Update("Update", "Book")
+      .Destroy("Delete", "Book")
+
+      //.Ajax()
+      //.Events(events => events.Error("error_handler"))
+      //.Model(model => model.Id(p => p.Book.Id))
+      //.Create(update => update.Action("Create", "Book"))
+      //.Read(read => read.Action("Load", "Book"))
+      //.Update(update => update.Action("Update", "Book"))
+      //.Destroy(update => update.Action("Delete", "Book"))
+      )
+)
+
+
+@*@(Html.Kendo().Window()
+    .Name("Window")
+    .Content(@<strong> Hello World!</strong>))*@
+
+
+@*<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>*@
