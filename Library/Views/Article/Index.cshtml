@@ -9,16 +9,18 @@
       .Columns(columns =>
       {
       columns.Bound(c => c.Article.Title).Width(110);
+      columns.Bound(c => c.Journal.NameJornal).Width(200);
       columns.Bound(c => c.Article.DatePublishing).Format("{0:MM/dd/yyyy}").Width(110);
-
       columns.Template(@<text>
         @{
             foreach (Author a in item.Authors)
             {
-                @a.FirstName @a.LastName <br />
+                @a.FirstName
+                <i>&nbsp;</i>
+                @a.LastName <br />
             }
         }
-    </text>).ClientTemplate("#=Books#").Title("Books");
+    </text>).ClientTemplate("#=Authors#").Title("Authors");
           columns.Command(command =>
           {
               command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
@@ -41,7 +43,7 @@
       .DataSource(dataSource => dataSource
         .Server()
         .PageSize(20)
-        .Model(model => model.Id(p => p.Article.Id.ToString()))
+        .Model(model => model.Id(p => p.Article.Id))
         .Read(read => read.Action("Index", "Article"))
         .Create("Create", "Article")
         .Update("Update", "Article")

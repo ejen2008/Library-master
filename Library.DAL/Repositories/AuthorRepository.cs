@@ -27,7 +27,7 @@ namespace Library.DAL.Repositories
         }
         public void Create(Author author)
         {
-            author.DateAdd = DateTime.Now;
+            //author.DateAdd = DateTime.Now;
             _dbLibrary.Authors.Add(author);
         }
         public void Update(Author author)

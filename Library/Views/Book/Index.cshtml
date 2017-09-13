@@ -5,6 +5,7 @@
 @{
     ViewBag.Title = "List of Books";
 }
+
 @(Html.Kendo().Grid(Model)
       .Name("Grid")
       .Columns(columns =>
@@ -14,7 +15,9 @@
         @{
             foreach (Author a in item.Authors)
             {
-                @a.FirstName @a.LastName <br />
+                @a.FirstName
+                <i>&nbsp;</i>
+                @a.LastName <br />
             }
         }
         </text>).ClientTemplate("#=Books#").Title("Authors").Width(200);
@@ -33,7 +36,7 @@
           toolbar.Create().Text("Add new book");
       })
       .Editable(editable => editable.Mode(GridEditMode.PopUp))
-      .HtmlAttributes(new { style = "height: 650px;" })
+                .HtmlAttributes(new { style = "height: 650px;" })
       .Pageable()
       .Sortable(sortable =>
       {
@@ -42,11 +45,10 @@
       .Scrollable()
       .DataSource(dataSource => dataSource
         .Server()
-        .PageSize(20)
-        .Model(model => model.Id(p => p.Book.Id.ToString()))
+        .Model(model => model.Id(p => p.Book.Id))
         .Read(read => read.Action("Index", "Book"))
         .Create("Create", "Book")
-        .Update(update => update.Action("Update", "Book"))
+        .Update("Update", "Book")
         .Destroy("Delete", "Book")
       )
 )

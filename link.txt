@@ -1,0 +1,7 @@
+Automated migration
+http://www.entityframeworktutorial.net/code-first/automated-migration-in-code-first.aspx 
+
+
+
+Cannot attach the file *.mdf as database
+https://stackoverflow.com/questions/17012839/cannot-attach-the-file-mdf-as-database

@@ -10,9 +10,9 @@ namespace Library.Domain.Entities
     {
         public int Id { get; set; }
         public string NameBook { get; set; }
-        public int? NumberPages { get; set; }
-        public int? DatePublishing { get; set; }
+        public int NumberPages { get; set; }
+        public int DatePublishing { get; set; }
         public string PublishingCompany { get; set; }
-        public DateTime? DateAdd { get; set; }
+        //public DateTime? DateAdd { get; set; }
     }
 }

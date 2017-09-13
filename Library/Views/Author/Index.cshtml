@@ -46,7 +46,7 @@
       .DataSource(dataSource => dataSource
         .Server()
         .PageSize(20)
-        .Model(model => model.Id(p => p.Author.Id.ToString()))
+        .Model(model => model.Id(p => p.Author.Id))
         .Read(read => read.Action("Index", "Author"))
         .Create("Create", "Author")
         .Update("Update", "Author")

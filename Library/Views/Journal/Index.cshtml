@@ -11,7 +11,6 @@
       columns.Bound(c => c.Juornal.NameJornal);
       columns.Bound(c => c.Juornal.DatePublishing).Format("{0:MM/dd/yyyy}").Width(110);
       columns.Bound(c => c.Juornal.NumberPage).Width(110);
-
       columns.Template(@<text>
         @{
             foreach (Article b in item.Articles)
@@ -19,17 +18,17 @@
                 @b.Title <br />
             }
         }
-    </text>).ClientTemplate("#=Books#").Title("Books");
-          columns.Command(command =>
-          {
-              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
-              command.Destroy().Text("Delete");
-          })
-              .Width(180);
+    </text>).ClientTemplate("#=Articles#").Title("Articles");
+            columns.Command(command =>
+            {
+                command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
+                command.Destroy().Text("Delete");
+            })
+                .Width(180);
       })
       .ToolBar(toolbar =>
       {
-          toolbar.Create().Text("Add new author");
+          toolbar.Create().Text("Add new journal");
       })
       .Editable(editable => editable.Mode(GridEditMode.PopUp))
       .HtmlAttributes(new { style = "height: 650px;" })
@@ -42,10 +41,10 @@
       .DataSource(dataSource => dataSource
         .Server()
         .PageSize(20)
-        .Model(model => model.Id(p => p.Juornal.Id.ToString()))
+        .Model(model => model.Id(p => p.Juornal.Id))
         .Read(read => read.Action("Index", "Juornal"))
-        .Create("Create", "Juornal")
-        .Update("Update", "Juornal")
-        .Destroy("Delete", "Juornal")
+        .Create("Create", "Journal")
+        .Update("Update", "Journal")
+        .Destroy("Delete", "Journal")
       )
 )

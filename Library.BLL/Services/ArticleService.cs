@@ -39,12 +39,16 @@ namespace Library.BLL.Services
         public IEnumerable<ArticleGetViewModel> GetArticles()
         {
             List<AuthorInArticle> articles = _authorInArticleRepository.GetAll().ToList();
-            List<ArticleGetViewModel> getArticlesViewModel = articles.GroupBy(x => x.Id).Select(x => new ArticleGetViewModel()
+            List<ArticleGetViewModel> getArticlesViewModel = articles.GroupBy(x => x.Article.Id).Select(x => new ArticleGetViewModel()
             {
-                Journal = _articleInJournalRepository.GetArticle(x.First().Id).First().Journal,
+                //Journal = _articleInJournalRepository.GetArticle(x.First().Id).First().Journal,
+                Journal = _articleInJournalRepository.GetArticle(x.First().Id).FirstOrDefault()?.Journal,
                 Article = x.FirstOrDefault()?.Article,
                 Authors = x.Select(a => a.Author).ToList()
             }).ToList();
+
+            var Journal = _articleInJournalRepository.GetArticle(1).FirstOrDefault()?.Journal;
+
             return getArticlesViewModel;
         }
 

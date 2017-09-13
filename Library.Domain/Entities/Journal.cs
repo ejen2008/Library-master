@@ -10,7 +10,7 @@ namespace Library.Domain.Entities
     {
         public int Id { get; set; }
         public string NameJornal { get; set; }
-        public DateTime? DatePublishing { get; set; }
-        public int? NumberPage { get; set; }
+        public DateTime DatePublishing { get; set; }
+        public int NumberPage { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace Library.BLL.Services
         public IEnumerable<JournalGetViewModel> GetJournals()
         {
             List<ArticleInJournal> journals = _journalRepository.GetAll().ToList();
-            var getJournalsViewModel = journals.GroupBy(x => x.Id).Select(x => new JournalGetViewModel()
+            var getJournalsViewModel = journals.GroupBy(x => x.Journal.Id).Select(x => new JournalGetViewModel()
             {
                 Juornal = x.FirstOrDefault()?.Journal,
                 Articles = x.Select(z => z.Article).ToList()

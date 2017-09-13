@@ -21,9 +21,10 @@ namespace Library.DAL.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
-            CreateBooks(context);
 
-            context.SaveChanges();
+
+            //CreateBooks(context);
+            //context.SaveChanges();
         }
 
         private void CreateBooks(Library.DAL.EF.LibraryContext context)
@@ -47,7 +48,7 @@ namespace Library.DAL.Migrations
                 FirstName = "Marquez",
                 LastName = "Gabriel Garcia",
                 BirthDate = new DateTime(1927, 3, 6),
-                DaiedDate = new DateTime(2014, 4, 17),
+                DaiedDate = new DateTime(2014, 4, 17)
             };
             context.AuthorInBooks.AddOrUpdate(
                 new AuthorInBook
@@ -112,7 +113,7 @@ namespace Library.DAL.Migrations
             {
                 FirstName = "Andrew",
                 LastName = "Troelsen",
-                BirthDate = new DateTime(1969, 4, 25),
+                BirthDate = new DateTime(1969, 4, 25)
             };
             context.AuthorInBooks.AddOrUpdate(new AuthorInBook
             {
@@ -143,11 +144,13 @@ namespace Library.DAL.Migrations
             {
                 FirstName = "Joseph",
                 LastName = "Albahari",
+                BirthDate = new DateTime(1966, 10, 23)
             };
             var benAlbahari = new Author
             {
                 FirstName = "Ben",
                 LastName = "Albahari",
+                BirthDate = new DateTime(1963, 9, 15)
             };
             context.AuthorInBooks.AddOrUpdate(
                 new AuthorInBook
