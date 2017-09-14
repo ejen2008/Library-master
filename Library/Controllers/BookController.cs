@@ -2,6 +2,8 @@
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Library.BLL.Services;
+using Library.Domain.Entities;
+using Library.ViewModels.AuthorViewModels;
 using Library.ViewModels.BookViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,80 +23,34 @@ namespace Library.Controllers
             _bookService = new BookService();
         }
 
-        //public ActionResult Index()
-        //{
-        //    IEnumerable<BookGetViewModel> booksView = _bookService.GetBooks();
-        //    return View(booksView);
-        //}
-
-        //[HttpPost]
-        //public ActionResult Create(BookGetViewModel bookView)
-        //{
-        //    if (bookView == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    if (ModelState.IsValid)
-        //    {
-        //        _bookService.CreateBook(bookView);
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-        //[HttpPost]
-        //public ActionResult Update(BookGetViewModel bookView)
-        //{
-        //    if (bookView == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    if (ModelState.IsValid)
-        //    {
-        //        _bookService.Update(bookView);
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-        //[HttpPost]
-        //public ActionResult Delete(BookGetViewModel bookView)
-        //{
-        //    if (bookView == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    if (bookView.Book.Id != 0)
-        //    {
-        //        _bookService.Delete(bookView.Book.Id);
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
-
         public ActionResult Index()
         {
             IEnumerable<BookGetViewModel> booksView = _bookService.GetBooks();
+            var x = new AuthorService().GetAuthors();
+            ViewData["Model"] = x;
 
-            return View(MapperBook(booksView));
+            return View(booksView);
         }
-        private IEnumerable<BookView> MapperBook(IEnumerable<BookGetViewModel> booksView)
+
+        public ActionResult Create()
         {
-            List<BookView> books = new List<BookView>();
-            foreach (BookGetViewModel b in booksView)
-            {
-                books.Add(new BookView
-                {
-                    Id = b.Book.Id,
-                    NameBook = b.Book.NameBook,
-                    NumberPages = b.Book.NumberPages,
-                    DatePublishing = b.Book.DatePublishing,
-                    PublishingCompany = b.Book.PublishingCompany
-                });
-            }
-            return books;
+            //var authors = new Dictionary<string, string>();
+            //authors.Add("1","sad");
+            //authors.Add("2", "dsa");
+            //authors.Add("3", "sda");
+            //var authors = new List<string>();
+            //authors.Add("sdsad");
+            //authors.Add("asd");
+            //authors.Add("sdasdfad");
+
+            var authors = new List<AuthorFullNameViewModel>();
+            ViewData["Authors"] = _bookService.GetAuthors();
+
+            return View();
         }
 
         [HttpPost]
-        public ActionResult Create(BookView bookView)
+        public ActionResult Create(BookUpdateViewModel bookView, IEnumerable<int> authorsMultiSelect)
         {
             if (bookView == null)
             {
@@ -102,35 +58,37 @@ namespace Library.Controllers
             }
             if (ModelState.IsValid)
             {
-                //_bookService.CreateBook(bookView);
+                _bookService.CreateBook(bookView, authorsMultiSelect);
             }
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult Update(BookView bookView)
+        public ActionResult Edit(int? Id)
         {
-            if (bookView == null)
+
+            if (Id == null)
             {
                 return HttpNotFound();
             }
-            if (ModelState.IsValid)
-            {
-                //_bookService.Update(bookView);
-            }
+            //if (ModelState.IsValid)
+            //{
+            //    //_bookService.Update(bookView);
+            //}
+
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult Delete(BookView bookView)
+        public ActionResult Delete(BookGetViewModel bookView)
         {
             if (bookView == null)
             {
                 return HttpNotFound();
             }
-            if (bookView.Id != 0)
+            if (bookView.Book.Id != 0)
             {
-                _bookService.Delete(bookView.Id);
+                _bookService.Delete(bookView.Book.Id);
             }
             return RedirectToAction("Index");
         }
@@ -141,7 +99,7 @@ namespace Library.Controllers
 
 
 
-        ////////////////////////////////////////////////////////////////
+
         public ActionResult AutoComplete()
         {
             var booksView = _bookService.GetBooks();
@@ -164,60 +122,5 @@ namespace Library.Controllers
         {
             return Json(_bookService.GetBooks()/*.ToDataSourceResult(request)*/);
         }
-
-        /////////////////////////////////////////////////////////////////
-
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        //public ActionResult Load([DataSourceRequest] DataSourceRequest request)
-        //{
-        //    return Json(_bookService.GetBooks().ToDataSourceResult(request));
-        //}
-
-        //[HttpPost]
-        //public ActionResult Create([DataSourceRequest] DataSourceRequest request, BookGetViewModel bookView)
-        //{
-        //    if (bookView != null && ModelState.IsValid)
-        //    {
-        //        _bookService.CreateBook(bookView);
-        //    }
-
-        //    return Json(new[] { bookView }.ToDataSourceResult(request, ModelState));
-        //}
-
-        //[HttpPost]
-        //public ActionResult Update([DataSourceRequest] DataSourceRequest request, BookGetViewModel bookView)
-        //{
-        //    if (bookView != null && ModelState.IsValid)
-        //    {
-        //        _bookService.Update(bookView);
-        //    }
-
-        //    return Json(new[] { bookView }.ToDataSourceResult(request, ModelState));
-        //}
-
-        //[HttpPost]
-        //public ActionResult Delete([DataSourceRequest] DataSourceRequest request, BookGetViewModel bookView)
-        //{
-        //    if (bookView != null)
-        //    {
-        //        _bookService.Delete(bookView.Book.Id);
-        //    }
-
-        //    return Json(new[] { bookView }.ToDataSourceResult(request, ModelState));
-        //}
-    }
-    public class BookView
-    {
-        [System.ComponentModel.DataAnnotations.ScaffoldColumn(false)]
-        public int Id { get; set; }
-        public string NameBook { get; set; }
-        public int NumberPages { get; set; }
-        public int DatePublishing { get; set; }
-        public string PublishingCompany { get; set; }
-
     }
 }

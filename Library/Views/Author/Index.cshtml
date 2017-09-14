@@ -1,8 +1,6 @@
 ﻿@using Library.ViewModels.AuthorViewModels
 @using Library.Domain.Entities
-
 @model IEnumerable<AuthorGetViewModel>
-
 @{
     ViewBag.Title = "List of Authors";
 }
@@ -17,25 +15,26 @@
       columns.Bound(c => c.Author.BirthDate).Format("{0:dd/MM/yyyy}").Width(110);
       columns.Bound(c => c.Author.DaiedDate).Format("{0:dd/MM/yyyy}").Width(110);
       columns.Template(@<text>
-            @{
-                foreach (Book b in item.Books)
-                {
-                    @b.NameBook <br />
-                }
+        @{
+            foreach (var b in item.Books)
+            {
+                @b.NameBook <br />
             }
-          </text>).ClientTemplate("#=Books#").Title("Books");
-      columns.Command(command =>
+        }
+    </text>).ClientTemplate("#=Books#").Title("Books");
+          columns.Command(command =>
           {
               command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
               command.Destroy().Text("Delete");
           })
-          .Width(180);
+              .Width(180);
       })
       .ToolBar(toolbar =>
       {
           toolbar.Create().Text("Add new author");
       })
       .Editable(editable => editable.Mode(GridEditMode.PopUp))
+
       .HtmlAttributes(new { style = "height: 650px;" })
       .Pageable()
       .Sortable(sortable =>

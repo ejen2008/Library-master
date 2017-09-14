@@ -8,17 +8,19 @@ using AutoMapper;
 using Library.ViewModels.BookViewModels;
 using Library.ViewModels.AuthorViewModels;
 using Library.Domain.Entities;
+using Library.BLL.AutoMapperConfig;
 
 namespace Library.BLL.Services
 {
     public class BookService
     {
         private AuthorInBookRepository _authorInBookRepository;
-
+        private AuthorRepository _authorRepository;
         public BookService()
         {
             var context = new DAL.EF.LibraryContext();
             _authorInBookRepository = new AuthorInBookRepository(context);
+            _authorRepository = new AuthorRepository(context);
         }
 
         public BookGetViewModel GetBook(int id)
@@ -47,20 +49,23 @@ namespace Library.BLL.Services
             return getBooksViewModel;
         }
 
-        public void CreateBook(BookGetViewModel bookView)
+        public void CreateBook(BookUpdateViewModel bookView, IEnumerable<int> authorId)
         {
             var authorInBook = new List<AuthorInBook>();
-            if (bookView.Authors.Count != 0)
+            var mapper = new AutoMapperForBook();
+            Book book =  mapper.Mapp(bookView);
+            if (authorId != null)
             {
-                foreach (Author a in bookView.Authors)
+                foreach (int id in authorId)
                 {
-                    authorInBook.Add(new AuthorInBook { Author = a, Book = bookView.Book });
+                    Author author = _authorRepository.Get(id);
+                    authorInBook.Add(new AuthorInBook {Author = author, Book = book});
                 }
             }
 
-            if (bookView.Authors.Count == 0)
+            if (authorId == null)
             {
-                authorInBook.Add(new AuthorInBook { Book = bookView.Book });
+                authorInBook.Add(new AuthorInBook { Book = book });
             }
             _authorInBookRepository.Create(authorInBook);
         }
@@ -102,6 +107,13 @@ namespace Library.BLL.Services
             {
                 _authorInBookRepository.Delete(aBook);
             }
+        }
+
+        public List<AuthorFullNameViewModel> GetAuthors()
+        {
+            var mapperAuthor = new AutoMapperForAuthor();
+            List <AuthorFullNameViewModel> authorView= mapperAuthor.Mapp(_authorRepository.GetAll()).ToList();
+            return authorView;
         }
     }
 }
