@@ -28,10 +28,12 @@ namespace Library.DAL.Repositories
         public void Create(Book book)
         {
             _dbLibrary.Books.Add(book);
+            _dbLibrary.SaveChanges();
         }
         public void Update(Book book)
         {
             _dbLibrary.Entry(book).State = EntityState.Modified;
+            _dbLibrary.SaveChanges();
         }
         public IEnumerable<Book> Find(Func<Book, Boolean> predicate)
         {
@@ -43,6 +45,7 @@ namespace Library.DAL.Repositories
             if (book != null)
             {
                 _dbLibrary.Books.Remove(book);
+                _dbLibrary.SaveChanges();
             }
         }
     }

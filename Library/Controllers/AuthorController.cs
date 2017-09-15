@@ -25,9 +25,16 @@ namespace Library.Controllers
             IEnumerable<AuthorGetViewModel> authorsView = _authorService.GetAuthors();
             return View(authorsView);
         }
+        [HttpGet]
+        public ActionResult Create()
+        {
+            var authors = new List<AuthorFullNameViewModel>();
+            ViewData["Authors"] = _authorService.GetAuthors();
+            return View();
+        }
 
         [HttpPost]
-        public ActionResult Create(AuthorGetViewModel authorView)
+        public ActionResult Create(AuthorUpdateViewModel authorView, IEnumerable<int> booksMultiSelect)
         {
             if (authorView==null)
             {
@@ -35,13 +42,31 @@ namespace Library.Controllers
             }
             if (ModelState.IsValid)
             {
-                _authorService.CreateAuthor(authorView);
+                _authorService.CreateAuthor(authorView/*, booksMultiSelect*/);
             }
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+            //AuthorUpdateViewModel author = _authorService.GetBookEdit(id.Value);
+            AuthorUpdateViewModel author = _authorService.GetAuthor(id.Value);
+            if (author == null)
+            {
+                return HttpNotFound();
+            }
+            ViewData["Books"] = _authorService.GetBooks();
+
+            return View(author);
+        }
+
         [HttpPost]
-        public ActionResult Update(AuthorGetViewModel authorView)
+        public ActionResult Edit(AuthorUpdateViewModel authorView)
         {
             if (authorView == null)
             {
@@ -51,22 +76,22 @@ namespace Library.Controllers
             {
                 _authorService.Update(authorView);
             }
-
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public ActionResult Delete(AuthorGetViewModel authorView)
+
+        public ActionResult Delete(int? id)
         {
-            if (authorView == null)
+            if (id == null)
             {
                 return HttpNotFound();
             }
-            if (authorView.Author.Id != 0)
+            if (id != 0)
             {
-                _authorService.Delete(authorView.Author.Id);
+                _authorService.Delete(id.Value);
             }
             return RedirectToAction("Index");
         }
+
     }
 }

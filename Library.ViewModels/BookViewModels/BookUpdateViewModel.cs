@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library.ViewModels.AuthorViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace Library.ViewModels.BookViewModels
         public int DatePublishing { get; set; }
         public string PublishingCompany { get; set; }
 
-        //public List<Domain.Entities.Author> Authors { get; set; }
+        public List<AuthorFullNameViewModel> Authors { get; set; }
+
     }
 }

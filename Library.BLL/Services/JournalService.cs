@@ -1,4 +1,5 @@
-﻿using Library.DAL.Repositories;
+﻿using Library.BLL.AutoMapperConfig;
+using Library.DAL.Repositories;
 using Library.Domain.Entities;
 using Library.ViewModels.JournalViewModels;
 using System;
@@ -10,32 +11,40 @@ namespace Library.BLL.Services
 {
     public class JournalService
     {
-        private ArticleInJournalRepository _journalRepository;
-
+        private ArticleInJournalRepository _articleInjournalRepository;
+        private JournalRepository _journalRepository;
         public JournalService()
         {
             var context = new DAL.EF.LibraryContext();
-            _journalRepository = new ArticleInJournalRepository(context);
+            _articleInjournalRepository = new ArticleInJournalRepository(context);
+            _journalRepository = new JournalRepository(context);
         }
 
-        public JournalGetViewModel GetJournal(int id)
+        public JournalUpdateViewModel GetJournal(int id)
         {
-            List<ArticleInJournal> journal = _journalRepository.GetJournal(id).ToList();
-            var journalView = new JournalGetViewModel();
-            if (journal != null)
+            Journal journalRepository = _journalRepository.Get(id);
+            var journalView = new JournalUpdateViewModel();
+            if (journalRepository != null)
             {
-                journalView = journal.GroupBy(x => x.Journal.Id).Select(x => new JournalGetViewModel()
-                {
-                    Juornal = x.First().Journal,
-                    Articles = x.Select(z => z.Article).ToList()
-                }).First();
+                var mapp = new AutoMapperForJournal();
+                journalView = mapp.Mapp(journalRepository);
             }
+            //List<ArticleInJournal> journal = _articleInjournalRepository.GetJournal(id).ToList();
+            //var journalView = new JournalGetViewModel();
+            //if (journal != null)
+            //{
+            //    journalView = journal.GroupBy(x => x.Journal.Id).Select(x => new JournalGetViewModel()
+            //    {
+            //        Juornal = x.First().Journal,
+            //        Articles = x.Select(z => z.Article).ToList()
+            //    }).First();
+            //}
             return journalView;
         }
 
         public IEnumerable<JournalGetViewModel> GetJournals()
         {
-            List<ArticleInJournal> journals = _journalRepository.GetAll().ToList();
+            List<ArticleInJournal> journals = _articleInjournalRepository.GetAll().ToList();
             var getJournalsViewModel = journals.GroupBy(x => x.Journal.Id).Select(x => new JournalGetViewModel()
             {
                 Juornal = x.FirstOrDefault()?.Journal,
@@ -44,30 +53,35 @@ namespace Library.BLL.Services
             return getJournalsViewModel;
         }
 
-        public void Create(JournalGetViewModel journalView)
+        public void Create(JournalUpdateViewModel journalView)
         {
-            var articleInJournal = new List<ArticleInJournal>();
-            if (journalView.Articles.Count != 0)
-            {
-                foreach (Article article in journalView.Articles)
-                {
-                    articleInJournal.Add(new ArticleInJournal { Journal = journalView.Juornal, Article = article });
-                }
-            }
-            if (journalView.Articles.Count == 0)
-            {
-                articleInJournal.Add(new ArticleInJournal { Journal = journalView.Juornal });
-            }
-            _journalRepository.Create(articleInJournal);
+            var mapp = new AutoMapperForJournal();
+            Journal journal = mapp.Mapp(journalView);
+            _journalRepository.Create(journal);
+            //var articleInJournal = new List<ArticleInJournal>();
+            //if (journalView.Articles.Count != 0)
+            //{
+            //    foreach (Article article in journalView.Articles)
+            //    {
+            //        articleInJournal.Add(new ArticleInJournal { Journal = journalView.Juornal, Article = article });
+            //    }
+            //}
+            //if (journalView.Articles.Count == 0)
+            //{
+            //    articleInJournal.Add(new ArticleInJournal { Journal = journalView.Juornal });
+            //}
+            //_journalRepository.Create(articleInJournal);
         }
 
-        public void Update(JournalGetViewModel journalView)
+        public void Update(JournalUpdateViewModel journalView)
         {
-            List<ArticleInJournal> articleInJournal = _journalRepository.GetJournal(journalView.Juornal.Id).ToList();
-            if (articleInJournal != null)
+            Journal journal = _journalRepository.Get(journalView.Id);
+            if (journal != null)
             {
-                List<ArticleInJournal> updateJournal = CreateArticleInJournal(journalView, articleInJournal.First().Id);
-                _journalRepository.Update(updateJournal);
+                journal.NameJornal = journalView.NameJornal;
+                journal.NumberPage = journalView.NumberPage;
+                journal.DatePublishing = journalView.DatePublishing;
+                _journalRepository.Update(journal);
             }
         }
         private List<ArticleInJournal> CreateArticleInJournal(JournalGetViewModel journalView, int IdArticleInJournal)
@@ -89,10 +103,10 @@ namespace Library.BLL.Services
 
         public void Delete(JournalGetViewModel journalView)
         {
-            List<ArticleInJournal> articleInJournal = _journalRepository.GetJournal(journalView.Juornal.Id).ToList();
+            List<ArticleInJournal> articleInJournal = _articleInjournalRepository.GetJournal(journalView.Juornal.Id).ToList();
             if (articleInJournal != null)
             {
-                _journalRepository.Delete(articleInJournal);
+                _articleInjournalRepository.Delete(articleInJournal);
             }
         }
     }

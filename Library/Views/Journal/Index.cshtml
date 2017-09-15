@@ -5,6 +5,7 @@
     ViewBag.Title = "List of journals";
 }
 
+@Html.ActionLink(" Add new journal", "Create", new { }, new { @class = "btn btn-success glyphicon glyphicon-plus-sign" })
 
 @(Html.Kendo().Grid(Model)
       .Name("Grid")
@@ -19,21 +20,27 @@
             }
         }
         </text>).ClientTemplate("#=Articles#").Title("Articles").Width(200);
-          columns.Bound(c => c.Juornal.NumberPage).Width(100);
-          columns.Bound(c => c.Juornal.DatePublishing).Format("{0:MM/yyyy}").Width(100);
-
-          columns.Command(command =>
-          {
-              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel").HtmlAttributes(new { style = "height: 30px;" });
-              command.Destroy().Text("Delete");
-          })
-              .Width(180);
-      })
-      .ToolBar(toolbar =>
-      {
-          toolbar.Create().Text("Add new journal");
-      })
-      .Editable(editable => editable.Mode(GridEditMode.PopUp))
+            columns.Bound(c => c.Juornal.NumberPage).Width(100);
+            columns.Bound(c => c.Juornal.DatePublishing).Format("{0:MM/yyyy}").Width(100);
+            columns.Template(@<text>
+    @Html.ActionLink(" ", "Edit", new { id = item.Juornal.Id }, new { @class = "btn k-primary glyphicon glyphicon-pencil" })
+            </text>).Width(75);
+    columns.Template(@<text>
+                @Html.ActionLink(" ", "Delete", new { id = item.Juornal.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash" })
+    </text>).Width(75);
+      
+          //columns.Command(command =>
+          //{
+          //    command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel").HtmlAttributes(new { style = "height: 30px;" });
+          //    command.Destroy().Text("Delete");
+          //})
+          //    .Width(180);
+    })
+      //.ToolBar(toolbar =>
+      //{
+      //    toolbar.Create().Text("Add new journal");
+      //})
+      //.Editable(editable => editable.Mode(GridEditMode.PopUp))
       .HtmlAttributes(new { style = "height: 650px;" })
       .Pageable()
       .Sortable(sortable =>
@@ -45,8 +52,8 @@
         .Server()
         .Model(model => model.Id(p => p.Juornal.Id))
         .Read(read => read.Action("Index", "Journal"))
-        .Create("Create", "Journal")
-        .Update("Update", "Journal")
-        .Destroy("Delete", "Journal")
+      //.Create("Create", "Journal")
+      //.Update("Update", "Journal")
+      //.Destroy("Delete", "Journal")
       )
 )

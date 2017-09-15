@@ -11,48 +11,53 @@
 @Html.ActionLink(" Add new book", "Create", new { }, new { @class = "btn btn-success glyphicon glyphicon-plus-sign" })
 
 @(Html.Kendo().Grid(Model)
-        
-      .Name("Grid")
-      .Columns(columns =>
-      {
-      columns.Bound(c => c.Book.NameBook);
-      columns.Template(@<text>
-        @{
-            foreach (Author author in item.Authors)
-            {
-                @author.FirstName
-                <i>&nbsp;</i>
-                @author.LastName<br />
-            }
-        }
-    </text>).ClientTemplate("#=Authors#").Title("Authors").Width(200);
-            columns.Bound(c => c.Book.NumberPages).Width(100);
-            columns.Bound(c => c.Book.DatePublishing).Width(100);
-            columns.Bound(c => c.Book.PublishingCompany).Width(200);
-            columns.Template(@<text>
-        @Html.ActionLink(" ", "Edit", new { id = item.Book.Id }, new { @class = "btn k-primary glyphicon glyphicon-pencil" })
-            </text>).Width(75);
-            columns.Template(@<text>
-                @Html.ActionLink(" ", "Delete", new { id = item.Book.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash" })
-            </text>).Width(75);
-      })
-      .ToolBar(toolbar => toolbar.ToString())
-      .Editable(editable => editable.Mode(GridEditMode.PopUp).AdditionalViewData(ViewData["Model"]))
-      .HtmlAttributes(new { style = "height: 600px;" })
-      .Pageable()
-      .Sortable(sortable =>
-      {
-          sortable.SortMode(GridSortMode.SingleColumn);
-      })
-      .Scrollable()
-      .DataSource(dataSource => dataSource
-      .Server()
-      .Model(model =>
-      {
-          model.Id(p => p.Book.Id);
-          model.Field(p => p.Book.NameBook);
-      })
-      .Read(read => read.Action("Index", "Book"))
-      .Create("Create", "Book")
-      )
-)
+          .Name("Grid")
+          .Columns(columns =>
+          {
+          columns.Bound(c => c.Book.NameBook);
+          columns.Template(@<text>
+            @{
+                if (item.Authors != null)
+                {
+                    foreach (Author author in item.Authors)
+                    {
+                    @author.FirstName
+                    <i>&nbsp;</i>
+                    @author.LastName<br />
+                    }
+                }
+                }
+        </text>).ClientTemplate("#=Authors#").Title("Authors").Width(200);
+                columns.Bound(c => c.Book.NumberPages).Width(100);
+                columns.Bound(c => c.Book.DatePublishing).Width(100);
+                columns.Bound(c => c.Book.PublishingCompany).Width(200);
+                columns.Template(@<text>
+            @Html.ActionLink(" ", "Edit", new { id = item.Book.Id }, new { @class = "btn k-primary glyphicon glyphicon-pencil" })
+                </text>).Width(75);
+                columns.Template(@<text>
+                    @Html.ActionLink(" ", "Delete", new { id = item.Book.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash" })
+                </text>).Width(75);
+          })
+          .ToolBar(toolbar => toolbar.ToString())
+          .Editable(editable => editable.Mode(GridEditMode.PopUp).AdditionalViewData(ViewData["Model"]))
+          .HtmlAttributes(new { style = "height: 600px;" })
+          .Pageable()
+          .Sortable(sortable =>
+          {
+              sortable.SortMode(GridSortMode.SingleColumn);
+          })
+          .Scrollable()
+          .DataSource(dataSource => dataSource
+          .Server()
+          .Model(model =>
+          {
+              model.Id(p => p.Book.Id);
+              model.Field(p => p.Book.NameBook);
+          })
+          .Read(read => read.Action("Index", "Book"))
+          )
+    )
+
+
+
+

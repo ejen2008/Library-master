@@ -195,8 +195,18 @@
     <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Views\Article\Index.cshtml" />
     <Content Include="Views\Journal\Index.cshtml" />
-    <Content Include="Views\Book\AutoComplete.cshtml" />
     <Content Include="Views\Book\Create.cshtml" />
+    <Content Include="Views\Author\Create.cshtml" />
+    <Content Include="Views\Book\CreatePartialView.cshtml" />
+    <Content Include="Views\Book\Edit.cshtml" />
+    <Content Include="Views\Author\CreatePartialView.cshtml" />
+    <Content Include="Views\Author\Edit.cshtml" />
+    <Content Include="Views\Journal\Create.cshtml" />
+    <Content Include="Views\Journal\Edit.cshtml" />
+    <Content Include="Views\Journal\CreatePartialView.cshtml" />
+    <Content Include="Views\Article\Create.cshtml" />
+    <Content Include="Views\Article\Edit.cshtml" />
+    <Content Include="Views\Article\CreatePartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />

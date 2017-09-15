@@ -136,6 +136,7 @@
     <Compile Include="Repositories\AuthorInBookRepository.cs" />
     <Compile Include="Repositories\BookRepository.cs" />
     <Compile Include="Repositories\ArticleInJournalRepository.cs" />
+    <Compile Include="Repositories\JournalRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Library.Domain\Library.Domain.csproj">

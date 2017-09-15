@@ -3,13 +3,11 @@
     ViewBag.Title = "Add new book";
 }
 
-
-
-
 <div class="col-md-offset-3 col-md-6 bg-info">
-    @using (Html.BeginForm("Create", "Book", FormMethod.Post, new { @class = "col-xs-12 col-md-12 text-left" }))
+    @using (Html.BeginForm("Edit", "Book", FormMethod.Post, new { @class = "col-xs-12 col-md-12 text-left" }))
     {
         @Html.Partial("CreatePartialView")
+
     }
 </div>
 <div class="col-md-offset-8 col-md-1">

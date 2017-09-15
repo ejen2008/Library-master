@@ -28,10 +28,12 @@ namespace Library.DAL.Repositories
         public void Create(Author author)
         {
             _dbLibrary.Authors.Add(author);
+            _dbLibrary.SaveChanges();
         }
         public void Update(Author author)
         {
             _dbLibrary.Entry(author).State = EntityState.Modified;
+            _dbLibrary.SaveChanges();
         }
         public IEnumerable<Author> Find(Func<Author, Boolean> predicate)
         {
@@ -43,6 +45,7 @@ namespace Library.DAL.Repositories
             if (author != null)
             {
                 _dbLibrary.Authors.Remove(author);
+                _dbLibrary.SaveChanges();
             }
         }
     }

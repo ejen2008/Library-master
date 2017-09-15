@@ -10,5 +10,13 @@ namespace Library.ViewModels.AuthorViewModels
     {
         public int Id { get; set; }
         public string FullName { get; set; }
+
+        public AuthorFullNameViewModel()
+        { }
+        public AuthorFullNameViewModel(int id, string firstName, string lastName)
+        {
+            Id = id;
+            FullName = firstName + " " + lastName;
+        }
     }
 }

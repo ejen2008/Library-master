@@ -5,6 +5,8 @@
     ViewBag.Title = "List of Authors";
 }
 
+@Html.ActionLink(" Add new author", "Create", new { }, new { @class = "btn btn-success glyphicon glyphicon-plus-sign" })
+
 @(Html.Kendo().Grid(Model)
       .Name("Grid")
       .Columns(columns =>
@@ -18,20 +20,19 @@
         @{
             foreach (var b in item.Books)
             {
+                if (b != null)
+                {
                 @b.NameBook <br />
+                }
             }
-        }
-    </text>).ClientTemplate("#=Books#").Title("Books");
-          columns.Command(command =>
-          {
-              command.Edit().Text("Edit").UpdateText("Ok").CancelText("Cancel");
-              command.Destroy().Text("Delete");
-          })
-              .Width(180);
-      })
-      .ToolBar(toolbar =>
-      {
-          toolbar.Create().Text("Add new author");
+            }
+               </text>).ClientTemplate("#=Books#").Title("Books");
+      columns.Template(@<text>
+              @Html.ActionLink(" ", "Edit", new { id = item.Author.Id }, new { @class = "btn k-primary glyphicon glyphicon-pencil" })
+              </text>).Width(75);
+      columns.Template(@<text>
+              @Html.ActionLink(" ", "Delete", new { id = item.Author.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash" })
+              </text>).Width(75);
       })
       .Editable(editable => editable.Mode(GridEditMode.PopUp))
 
@@ -47,8 +48,5 @@
         .PageSize(20)
         .Model(model => model.Id(p => p.Author.Id))
         .Read(read => read.Action("Index", "Author"))
-        .Create("Create", "Author")
-        .Update("Update", "Author")
-        .Destroy("Delete", "Author")
       )
 )

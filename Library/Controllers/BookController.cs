@@ -26,25 +26,16 @@ namespace Library.Controllers
         public ActionResult Index()
         {
             IEnumerable<BookGetViewModel> booksView = _bookService.GetBooks();
-            var x = new AuthorService().GetAuthors();
-            ViewData["Model"] = x;
+            //var x = new AuthorService().GetAuthors();
+            //ViewData["Model"] = x;
 
             return View(booksView);
         }
-
+        [HttpGet]
         public ActionResult Create()
         {
-            //var authors = new Dictionary<string, string>();
-            //authors.Add("1","sad");
-            //authors.Add("2", "dsa");
-            //authors.Add("3", "sda");
-            //var authors = new List<string>();
-            //authors.Add("sdsad");
-            //authors.Add("asd");
-            //authors.Add("sdasdfad");
-
             var authors = new List<AuthorFullNameViewModel>();
-            ViewData["Authors"] = _bookService.GetAuthors();
+            ViewBag.Authors = _bookService.GetAuthors();
 
             return View();
         }
@@ -63,64 +54,47 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public ActionResult Edit(int? Id)
+        [HttpGet]
+        public ActionResult Edit(int? id)
         {
-
-            if (Id == null)
+            if (id == null)
             {
                 return HttpNotFound();
             }
-            //if (ModelState.IsValid)
-            //{
-            //    //_bookService.Update(bookView);
-            //}
-
-            return RedirectToAction("Index");
+            BookUpdateViewModel book = _bookService.GetBookEdit(id.Value);
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+            ViewData["Authors"] = _bookService.GetAuthors();
+            return View(book);
         }
 
         [HttpPost]
-        public ActionResult Delete(BookGetViewModel bookView)
+        public ActionResult Edit(BookUpdateViewModel bookView, List<int> authorsMultiSelect)
         {
             if (bookView == null)
             {
                 return HttpNotFound();
             }
-            if (bookView.Book.Id != 0)
+            if (ModelState.IsValid)
             {
-                _bookService.Delete(bookView.Book.Id);
+                _bookService.Update(bookView, authorsMultiSelect);
             }
             return RedirectToAction("Index");
         }
 
-
-
-
-
-
-
-
-        public ActionResult AutoComplete()
+        public ActionResult Delete(int? id)
         {
-            var booksView = _bookService.GetBooks();
-            var nameBook = new List<string>();
-            foreach (BookGetViewModel aBook in booksView)
+            if (id == null)
             {
-                nameBook.Add(aBook.Book.NameBook);
+                return HttpNotFound();
             }
-            //ViewData["nameBook"] = nameBook;
-            return View(nameBook);
-        }
-
-        public ActionResult AutoCompleteLoad(string text)
-        {
-            var result = _bookService.GetBooks().Where(c => c.Book.NameBook.Contains(text)).ToList();
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult GetData(/*[DataSourceRequest] DataSourceRequest request*/)
-        {
-            return Json(_bookService.GetBooks()/*.ToDataSourceResult(request)*/);
+            if (id != 0)
+            {
+                _bookService.Delete(id.Value);
+            }
+            return RedirectToAction("Index");
         }
     }
 }

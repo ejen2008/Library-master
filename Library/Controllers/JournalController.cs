@@ -20,8 +20,17 @@ namespace Library.Controllers
         {
             return View(_journalService.GetJournals());
         }
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+
+
         [HttpPost]
-        public ActionResult Create(JournalGetViewModel journalView)
+        public ActionResult Create(JournalUpdateViewModel journalView)
         {
             if (journalView == null)
             {
@@ -34,8 +43,28 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+            JournalUpdateViewModel journalView = new JournalUpdateViewModel();
+            if (id !=0)
+            {
+                journalView=  _journalService.GetJournal(id.Value);
+            }
+            if (journalView == null)
+            {
+                return HttpNotFound();
+            }
+            return View(journalView);
+        }
+
+
         [HttpPost]
-        public ActionResult Update(JournalGetViewModel journalView)
+        public ActionResult Edit(JournalUpdateViewModel journalView)
         {
             if (journalView == null)
             {

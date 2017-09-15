@@ -1,16 +1,19 @@
-﻿@model Library.ViewModels.BookViewModels.BookUpdateViewModel
+﻿@model Library.ViewModels.AuthorViewModels.AuthorUpdateViewModel
+
+
 @{
-    ViewBag.Title = "Add new book";
+    ViewBag.Title = "Add new author";
 }
 
-
-
-
 <div class="col-md-offset-3 col-md-6 bg-info">
-    @using (Html.BeginForm("Create", "Book", FormMethod.Post, new { @class = "col-xs-12 col-md-12 text-left" }))
+    @using (Html.BeginForm("Create", "Author", FormMethod.Post, new { @class = "col-xs-12 col-md-12 text-left" }))
     {
+
         @Html.Partial("CreatePartialView")
+
     }
+
+
 </div>
 <div class="col-md-offset-8 col-md-1">
     @Html.ActionLink("Back", "Index", new { }, new { @class = "btn btn-default glyphicon glyphicon-hand-left" })

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Library.Domain.Entities;
+using Library.ViewModels.AuthorViewModels;
 using Library.ViewModels.BookViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,17 @@ namespace Library.BLL.AutoMapperConfig
 {
     public class AutoMapperForBook
     {
-        public Book Mapp(BookUpdateViewModel author)
+        public Book Mapp(BookUpdateViewModel book)
         {
             Mapper.Initialize(m => m.CreateMap<BookUpdateViewModel, Book>());
-            return Mapper.Map<BookUpdateViewModel, Book>(author);
+            return Mapper.Map<BookUpdateViewModel, Book>(book);
         }
+
+        public IEnumerable<BookTitleViewModel> Mapp(IEnumerable<Book> book)
+        {
+            Mapper.Initialize(m => m.CreateMap<Book, BookTitleViewModel>());
+            return Mapper.Map<IEnumerable<Book>, IEnumerable<BookTitleViewModel>>(book);
+        }
+
     }
 }

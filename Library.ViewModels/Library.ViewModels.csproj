@@ -45,11 +45,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArticleViewModels\ArticleGetViewModel.cs" />
+    <Compile Include="ArticleViewModels\ArticleUpdateViewModel.cs" />
     <Compile Include="AuthorViewModels\AuthorFullNameViewModel.cs" />
     <Compile Include="AuthorViewModels\AuthorGetViewModel.cs" />
+    <Compile Include="AuthorViewModels\AuthorUpdateViewModel.cs" />
     <Compile Include="BookViewModels\BookGetViewModel.cs" />
+    <Compile Include="BookViewModels\BookTitleViewModel.cs" />
     <Compile Include="BookViewModels\BookUpdateViewModel.cs" />
     <Compile Include="JournalViewModels\JournalGetViewModel.cs" />
+    <Compile Include="JournalViewModels\JournalUpdateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
